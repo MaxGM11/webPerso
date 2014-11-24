@@ -15,16 +15,18 @@
     $("document").ready(function(){
         console.log('page loaded');
 
-        $("#Main")      .css("background-image",    "url('../images/background.png')")
-                        .css("width",               "1280")
-                        .css("height",              "800")
+        $("#Main")      .css("background-image",    "url('../images/background.jpg')")
+                        .css("background-repeat",   "no-repeat")
+                        .css("width",               "800")
+                        .css("height",              "600")
                         .css("position",            "absolute");
 
         $("#movable")   .attr("width",              "100px")
                         .attr("height",             "100px")
                         .css("margin-left",         this.positionX)
                         .css("margin-top",          this.positionY)
-                        .append("<img id='sprite'></div>");
+                        .append("<img id='sprite'></div>")
+                        .css("position",            "absolute");
 
         $("#sprite")    .attr("width",              "100px")
                         .attr("height",             "100px")
@@ -32,46 +34,59 @@
 
         var movingDirection = [0,0];
         var speed = 10;
+		var moving = false;
 
         function move(x,y){
             $("#movable")   .css("margin-left",     "+="+x+"px")
-                            .css("margin-top",      "+="+y+"px");
+                            .css("margin-top",      "-="+y+"px");
         }
         function isMoving(){
             return (movingDirection[0] != 0 || movingDirection[1] != 0)
         }
         $("*").keydown(function(codeKey){
-            if(!moving) {
+            if(true) {
                 switch (codeKey.key) {
                     case "Up" :
-                        movingDirection[0] = 1;
-                        moving = true;
+                        movingDirection[1] = 1;
                         break;
                     case "Down" :
-                        movingDirection[0] = -1;
-                        moving = true;
+                        movingDirection[1] = -1;
                         break;
                     case "Right" :
-                        movingDirection[1] = 1;
-                        moving = true;
+                        movingDirection[0] = 1;
                         break;
                     case "Left" :
-                        movingDirection[1] = -1;
-                        moving = true;
-                        break;
-                    default :
-                        movingDirection[0] = 0;
-                        movingDirection[1] = 0;
+                        movingDirection[0] = -1;
                         break;
                 }
             }
-            console.log(movingDirection[0] + " " + movingDirection[1]);
-            if(movingDirection[0] != 0 || movingDirection[1] != 0){
-                move(   movingDirection[0]*speed,
-                        movingDirection[1]*speed);
-            }
-
         });
+        $("*").keyup(function(codeKey){
+			switch (codeKey.key) {
+				case "Up" :
+					movingDirection[1] = 0;
+					break;
+				case "Down" :
+					movingDirection[1] = 0;
+					break;
+				case "Right" :
+					movingDirection[0] = 0;
+					break;
+				case "Left" :
+					movingDirection[0] = 0;
+					break;
+			}
+        });
+			
+			
+		setInterval(function(){
+			if(isMoving()){
+				move(   movingDirection[0]*speed,
+						movingDirection[1]*speed);
+			}
+		},
+		10);
+
 
     });
 </script>
