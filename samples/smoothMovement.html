@@ -2,93 +2,110 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>Movement in javascript v1.1</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
 
-<div id="Main">
-    <div id="movable"></div>
-</div>
+	<p>This sample illustrates how to SMOOTHLY move an object with javascript with keyboard actions :
+		using -= and += regarding the keyUP or keyDOWN;
+	</p>
+	<div id="Main">
+		
+		<div id="movable"></div>
+	</div>
 
-<script>
-    $("document").ready(function(){
-        console.log('page loaded');
+	<script>
+		$("document").ready(function(){
+		
+			console.log('page loaded');
 
-        $("#Main")      .css("background-image",    "url('../images/background.jpg')")
-                        .css("background-repeat",   "no-repeat")
-                        .css("width",               "800")
-                        .css("height",              "600")
-                        .css("position",            "absolute");
+			$("#Main")      .css("background-image",    "url('../images/background.jpg')")
+							.css("background-repeat",   "no-repeat")
+							.css("width",               "800")
+							.css("height",              "600")
+							.css("position",            "absolute");
 
-        $("#movable")   .attr("width",              "100px")
-                        .attr("height",             "100px")
-                        .css("margin-left",         this.positionX)
-                        .css("margin-top",          this.positionY)
-                        .append("<img id='sprite'></div>")
-                        .css("position",            "absolute");
+			$("#movable")   .attr("width",              "100px")
+							.attr("height",             "100px")
+							.css("margin-left",         "330px")
+							.css("margin-top",          "200px")
+							.css("border",				"1px solid black")  // For debug
+							.css("position",            "absolute")
+							.append("<img id='sprite'></div>");
 
-        $("#sprite")    .attr("width",              "100px")
-                        .attr("height",             "100px")
-                        .attr("src",                "../images/spaceship.png");
+			$("#sprite")    .attr("width",              "100px")
+							.attr("height",             "100px")
+							.attr("src",                "../images/spaceship.png");
 
-        var movingDirection = [0,0];
-        var speed = 10;
-		var moving = false;
+			var movingDirection = [0,0];
+			var speed = 3;
 
-        function move(x,y){
-            $("#movable")   .css("margin-left",     "+="+x+"px")
-                            .css("margin-top",      "-="+y+"px");
-        }
-        function isMoving(){
-            return (movingDirection[0] != 0 || movingDirection[1] != 0)
-        }
-        $("*").keydown(function(codeKey){
-            if(true) {
-                switch (codeKey.key) {
-                    case "Up" :
-                        movingDirection[1] = 1;
-                        break;
-                    case "Down" :
-                        movingDirection[1] = -1;
-                        break;
-                    case "Right" :
-                        movingDirection[0] = 1;
-                        break;
-                    case "Left" :
-                        movingDirection[0] = -1;
-                        break;
-                }
-            }
-        });
-        $("*").keyup(function(codeKey){
-			switch (codeKey.key) {
-				case "Up" :
-					movingDirection[1] = 0;
-					break;
-				case "Down" :
-					movingDirection[1] = 0;
-					break;
-				case "Right" :
-					movingDirection[0] = 0;
-					break;
-				case "Left" :
-					movingDirection[0] = 0;
-					break;
+			function move(x,y){
+				$("#movable")   .css("margin-left",     "+="+x+"px")
+								.css("margin-top",      "-="+y+"px");
 			}
-        });
-			
-			
-		setInterval(function(){
-			if(isMoving()){
-				move(   movingDirection[0]*speed,
-						movingDirection[1]*speed);
+			function isMoving(){
+				return (movingDirection[0] != 0 || movingDirection[1] != 0)
 			}
-		},
-		10);
+			
+			/*
+			*
+			*		We get Downed keys 
+			*
+			*/
+			$("*").keydown(function(codeKey){
+				if(true) {
+					switch (codeKey.key) {
+						case "Up" :
+							movingDirection[1] += 1;
+							break;
+						case "Down" :
+							movingDirection[1] -= 1;
+							break;
+						case "Right" :
+							movingDirection[0] += 1;
+							break;
+						case "Left" :
+							movingDirection[0] -= 1;
+							break;
+					}
+				}
+			});
+			
+			/*
+			*
+			*		We get Up key
+			*
+			*/
+			$("*").keyup(function(codeKey){
+				switch (codeKey.key) {
+						case "Up" :
+							movingDirection[1] -= 1;
+							break;
+						case "Down" :
+							movingDirection[1] += 1;
+							break;
+						case "Right" :
+							movingDirection[0] -= 1;
+							break;
+						case "Left" :
+							movingDirection[0] += 1;
+							break;
+				}
+			});
+				
+				
+			setInterval(function(){
+				if(isMoving()){
+					move(   movingDirection[0]*speed,
+							movingDirection[1]*speed);
+				}
+			},
+			10);
 
 
-    });
-</script>
+		});
+	</script>
 </body>
 </html>
