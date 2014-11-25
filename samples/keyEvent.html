@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Key Events v1.0</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	
+	<style>
+		#keyIndicator{
+			width:              150px;
+			height:             150px;
+			margin-left:        100px;
+			margin-top:         100px;
+			/*border:				1px solid black;  /* For debug */
+		}
+		.indicator{
+			width:              150px;
+			height:             150px;
+			width:				50px;
+			height:				50px;
+			border:				1px solid black;
+			position:           absolute;
+			background-color:	#d3d3d3;
+			/*transition : 		background-color .1s ease;*/
+		}
+		
+		#keyIndicatorA		{margin:00px  50px;}
+		#keyIndicatorB		{margin:100px 50px;}
+		
+	</style>
+</head>
+<body>
+
+	<p>This sample illustrates how key events are managed in javascript
+	</p>
+
+	<div id="keyIndicator">
+		<div id="keyIndicatorA" class='indicator'>A</div>
+		<div id="keyIndicatorB" class='indicator'>B</div>
+	</div>
+	
+	<script>
+		$("document").ready(function(){
+		
+			console.log('page loaded');
+
+
+			/*
+			*		We get Downed keys
+			*/
+			$("*").keypress(function(codeKey){
+				switch (codeKey.key) {
+					case "a" :
+						$("#keyIndicatorA").css({backgroundColor:"#ff0000"});
+						console.log("a keypress");
+						break;
+					case "b" :
+						$("#keyIndicatorB").css({backgroundColor:"#ff0000"});
+						console.log("b keypress");
+						break;
+				}
+			});
+
+			/*
+			*		We get Downed keys
+			*/
+			$("*").keydown(function(codeKey){
+				switch (codeKey.key) {
+					case "a" :
+						$("#keyIndicatorA").css({backgroundColor:"#ff0000"});
+						console.log("a keydown");
+						break;
+					case "b" :
+						$("#keyIndicatorB").css({backgroundColor:"#ff0000"});
+						console.log("b keydown");
+						break;
+				}
+			});
+			
+			/*
+			*		We get Up key
+			*/
+			$("*").keyup(function(codeKey){
+				switch (codeKey.key) {
+					case "a" :
+						$("#keyIndicatorA").css({backgroundColor:"#d3d3d3"});
+						console.log("a keyup");
+						break;
+					case "b" :
+						$("#keyIndicatorB").css({backgroundColor:"#d3d3d3"});
+						console.log("b keyup");
+						break;
+				}
+			});
+				
+				
+			setInterval(function(){
+					console.log ("test on ... ");
+				},
+				3000
+			);
+
+
+		});
+	</script>
+</body>
+</html>

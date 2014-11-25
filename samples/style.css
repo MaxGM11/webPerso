@@ -1,0 +1,64 @@
+#Main{
+	background-image:    url("../i mages/background.jpg");
+	background-repeat:   no-repeat;
+	width:               800px;
+	height:              600px;
+	position:            absolute;
+}
+
+#movable{
+	width:              100px;
+	height:             100px;
+	margin-left:        330px;
+	margin-top:         200px;
+	border:				1px solid black;  /* For debug */
+	position:           absolute;
+}
+
+#keyIndicator{
+	width:              150px;
+	height:             150px;
+	margin-left:        900px;
+	margin-top:         100px;
+	/*border:				1px solid black;  /* For debug */
+	float:           left;
+}
+
+#moveIndicator{
+	width:              150px;
+	height:             150px;
+	margin-left:        900px;
+	margin-top:         350px;
+	/*border:				1px solid black;  /* For debug */
+	position:           absolute;
+}
+.menuTransition{
+	margin-left:        900px;
+	margin-top:         500px;
+	border:				1px solid black;  /* For debug */
+	position:           absolute;
+}
+
+.indicator{
+	width:              150px;
+	height:             150px;
+	width:				50px;
+	height:				50px;
+	border:				1px solid black;
+	position:           absolute;
+	background-color:	#d3d3d3;
+	transition : 		background-color .6s ease;
+}
+.indicator:hover{
+	background-color:red;
+}
+
+#keyIndicatorUp		{margin:00px  50px;}
+#keyIndicatorDown	{margin:100px 50px;}
+#keyIndicatorLeft	{margin:50px  00px;}
+#keyIndicatorRight	{margin:50px  100px;}
+
+#moveIndicatorUp	{margin:00px  50px;}
+#moveIndicatorDown	{margin:100px 50px;}
+#moveIndicatorLeft	{margin:50px  00px;}
+#moveIndicatorRight	{margin:50px  100px;}

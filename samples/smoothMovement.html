@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Movement in javascript v1.1</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -12,31 +13,27 @@
 	</p>
 	<div id="Main">
 		
-		<div id="movable"></div>
+		<div id="movable">
+			<img id='sprite' width='100px' height='100px' src='../images/spaceship.png'></div>
+		</div>
 	</div>
-
+	<div id="keyIndicator">
+		<div id="keyIndicatorUp" class='indicator'></div>
+		<div id="keyIndicatorDown" class='indicator'></div>
+		<div id="keyIndicatorLeft" class='indicator'></div>
+		<div id="keyIndicatorRight" class='indicator'></div>
+	</div>
+	<div id="moveIndicator">
+		<div id="moveIndicatorUp" class='indicator'></div>
+		<div id="moveIndicatorDown" class='indicator'></div>
+		<div id="moveIndicatorLeft" class='indicator'></div>
+		<div id="moveIndicatorRight" class='indicator'></div>
+	</div>
+	
 	<script>
 		$("document").ready(function(){
 		
 			console.log('page loaded');
-
-			$("#Main")      .css("background-image",    "url('../images/background.jpg')")
-							.css("background-repeat",   "no-repeat")
-							.css("width",               "800")
-							.css("height",              "600")
-							.css("position",            "absolute");
-
-			$("#movable")   .attr("width",              "100px")
-							.attr("height",             "100px")
-							.css("margin-left",         "330px")
-							.css("margin-top",          "200px")
-							.css("border",				"1px solid black")  // For debug
-							.css("position",            "absolute")
-							.append("<img id='sprite'></div>");
-
-			$("#sprite")    .attr("width",              "100px")
-							.attr("height",             "100px")
-							.attr("src",                "../images/spaceship.png");
 
 			var movingDirection = [0,0];
 			var speed = 3;
@@ -55,21 +52,24 @@
 			*
 			*/
 			$("*").keydown(function(codeKey){
-				if(true) {
-					switch (codeKey.key) {
-						case "Up" :
-							movingDirection[1] += 1;
-							break;
-						case "Down" :
-							movingDirection[1] -= 1;
-							break;
-						case "Right" :
-							movingDirection[0] += 1;
-							break;
-						case "Left" :
-							movingDirection[0] -= 1;
-							break;
-					}
+				switch (codeKey.key) {
+					case "Up" :
+						$("#keyIndicatorUp").css({backgroundColor:"#ff0000"});
+						console.log("keyUp pressed");
+						movingDirection[1] += 1;
+						break;
+					case "Down" :
+						console.log("keyDown pressed");
+						movingDirection[1] -= 1;
+						break;
+					case "Right" :
+						console.log("keyRight pressed");
+						movingDirection[0] += 1;
+						break;
+					case "Left" :
+						console.log("keyLeft pressed");
+						movingDirection[0] -= 1;
+						break;
 				}
 			});
 			
@@ -80,16 +80,17 @@
 			*/
 			$("*").keyup(function(codeKey){
 				switch (codeKey.key) {
-						case "Up" :
+						case "ArrowUp" :
+							$("#keyIndicatorUp").css({backgroundColor:"#d3d3d3"});
 							movingDirection[1] -= 1;
 							break;
-						case "Down" :
+						case "ArrowDown" :
 							movingDirection[1] += 1;
 							break;
-						case "Right" :
+						case "ArrowRight" :
 							movingDirection[0] -= 1;
 							break;
-						case "Left" :
+						case "ArrowLeft" :
 							movingDirection[0] += 1;
 							break;
 				}
@@ -98,11 +99,12 @@
 				
 			setInterval(function(){
 				if(isMoving()){
-					move(   movingDirection[0]*speed,
-							movingDirection[1]*speed);
+					/*move(   movingDirection[0]*speed,
+							movingDirection[1]*speed);*/
+					console.log ("hor:"+movingDirection[0]+"/ver:"+movingDirection[1]);
 				}
 			},
-			10);
+			100);
 
 
 		});
