@@ -9,7 +9,7 @@
 <body>
 
 	<p>This sample illustrates how to SMOOTHLY move an object with javascript with keyboard actions :
-		using -= and += regarding the keyUP or keyDOWN;
+		using -= and += regarding the keyUP or keyDOWN event;
 	</p>
 	<div id="Main">
 		
@@ -23,52 +23,66 @@
 		<div id="keyIndicatorLeft" class='indicator'></div>
 		<div id="keyIndicatorRight" class='indicator'></div>
 	</div>
-	<div id="moveIndicator">
-		<div id="moveIndicatorUp" class='indicator'></div>
-		<div id="moveIndicatorDown" class='indicator'></div>
-		<div id="moveIndicatorLeft" class='indicator'></div>
-		<div id="moveIndicatorRight" class='indicator'></div>
-	</div>
 	
 	<script>
 		$("document").ready(function(){
-		
-			console.log('page loaded');
 
 			var movingDirection = [0,0];
-			var speed = 3;
+			var speed = 1;
+			var pressedButton = [0,0,0,0]; // Correspondind to [Up,Left,Down,Right];
 
 			function move(x,y){
 				$("#movable")   .css("margin-left",     "+="+x+"px")
 								.css("margin-top",      "-="+y+"px");
 			}
+			
 			function isMoving(){
 				return (movingDirection[0] != 0 || movingDirection[1] != 0)
 			}
 			
+			
 			/*
 			*
 			*		We get Downed keys 
-			*
+			*		This function is repeated until the key is pressed. So we need to prevent this : pressedButton
 			*/
 			$("*").keydown(function(codeKey){
 				switch (codeKey.key) {
-					case "Up" :
-						$("#keyIndicatorUp").css({backgroundColor:"#ff0000"});
-						console.log("keyUp pressed");
-						movingDirection[1] += 1;
+					case "ArrowUp" :
+						if(pressedButton[0] == 0)
+						{
+							$("#keyIndicatorUp").css({backgroundColor:"#ff0000"});
+							console.log("keyUp pressed");
+							movingDirection[1] = 1;
+							pressedButton[0] = 1;
+						}
 						break;
-					case "Down" :
-						console.log("keyDown pressed");
-						movingDirection[1] -= 1;
+					case "ArrowDown" :
+						if(pressedButton[2] == 0)
+						{
+							$("#keyIndicatorDown").css({backgroundColor:"#ff0000"});
+							console.log("keyDown pressed");
+							movingDirection[1] = -1;
+							pressedButton[2] = 1;
+						}
 						break;
-					case "Right" :
-						console.log("keyRight pressed");
-						movingDirection[0] += 1;
+					case "ArrowRight" :
+						if(pressedButton[3] == 0)
+						{
+							$("#keyIndicatorRight").css({backgroundColor:"#ff0000"});
+							console.log("keyRight pressed");
+							movingDirection[0] = 1;
+							pressedButton[3] = 1;
+						}
 						break;
-					case "Left" :
-						console.log("keyLeft pressed");
-						movingDirection[0] -= 1;
+					case "ArrowLeft" :
+						if(pressedButton[1] == 0)
+						{
+							$("#keyIndicatorLeft").css({backgroundColor:"#ff0000"});
+							console.log("keyLeft pressed");
+							movingDirection[0] = -1;
+							pressedButton[1] = 1;
+						}
 						break;
 				}
 			});
@@ -80,31 +94,50 @@
 			*/
 			$("*").keyup(function(codeKey){
 				switch (codeKey.key) {
-						case "ArrowUp" :
-							$("#keyIndicatorUp").css({backgroundColor:"#d3d3d3"});
-							movingDirection[1] -= 1;
-							break;
-						case "ArrowDown" :
-							movingDirection[1] += 1;
-							break;
-						case "ArrowRight" :
-							movingDirection[0] -= 1;
-							break;
-						case "ArrowLeft" :
-							movingDirection[0] += 1;
-							break;
+					case "ArrowUp" :
+						$("#keyIndicatorUp").css({backgroundColor:"#d3d3d3"});
+						console.log("keyUp released");
+						if (pressedButton[2] == 1) 	movingDirection[1] = -1;
+						else						movingDirection[1] = 0;
+						pressedButton[0] = 0;
+						break;
+					case "ArrowDown" :
+						$("#keyIndicatorDown").css({backgroundColor:"#d3d3d3"});
+						console.log("keyDown released");
+						if (pressedButton[0] == 1)  movingDirection[1] = 1;
+						else						movingDirection[1] = 0;
+						pressedButton[2] = 0;
+						break;
+					case "ArrowRight" :
+						$("#keyIndicatorRight").css({backgroundColor:"#d3d3d3"});
+						console.log("keyRight released");
+						if (pressedButton[1] == 1) 	movingDirection[0] = -1;
+						else						movingDirection[0] = 0;
+						pressedButton[3] = 0;
+						break;
+					case "ArrowLeft" :
+						$("#keyIndicatorLeft").css({backgroundColor:"#d3d3d3"});
+						console.log("keyLeft released");
+						if (pressedButton[3] == 1) movingDirection[0] = 1;
+						else						movingDirection[0] = 0;
+						pressedButton[1] = 0;
+						break;
 				}
 			});
 				
-				
+			
+			/*
+			*
+			*		Infinite loop of the program
+			*
+			*/
 			setInterval(function(){
 				if(isMoving()){
-					/*move(   movingDirection[0]*speed,
-							movingDirection[1]*speed);*/
+					move(   movingDirection[0]*speed,
+							movingDirection[1]*speed);
 					console.log ("hor:"+movingDirection[0]+"/ver:"+movingDirection[1]);
 				}
-			},
-			100);
+			},10);
 
 
 		});
