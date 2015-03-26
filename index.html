@@ -1,139 +1,17 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-</head>
-<body>
-
-    <div id="World">
-
-    </div>
-
-    <script>
-        $("document").ready(function(){
-            console.log('page loaded');
-
-            function World()
-            {
-                this.endGame = false;
-                this.ennemies = new Array();
-                this.movingDirection = [0,0];
-                this.startPosition = [300,200];
-                $("#World") .css("background-image","url('images/background.png')")
-                            .css("width",           "1280")
-                            .css("height",          "800");
-
-                this.startPositionX = function(){return this.startPosition[0];};
-                this.startPositionY = function(){return this.startPosition[1];};
-
-                this.addPlayer = function(player){
-                    this.player = player;
-                    this.player.init();
-                };
-
-                this.addEnnemy = function(ennemy){
-                    this.ennemies.push(ennemy);
-                };
-
-
-
-                this.run = function(){
-
-                    while(this.endGame){
-
-                        // Moving hero is needed
-
-
-                        // See if the game if ended
-
-                    }
-                }
-            }
-
-            function Player(id,startPositionX,startPositionY){
-                this.id = id;
-                this.life = 100;
-                this.ammo = 10;
-                this.height = 100;
-                this.width = 100;
-                this.sprite = "images/spaceship.png";
-                this.positionX = startPositionX;
-                this.positionY = startPositionY;
-                this.speed = 10;
-
-                this.updateView = function(){
-                    $("#"+this.id)  .css("margin-left",this.positionX)
-                                    .css("margin-top",this.positionY);
-                }
-
-                this.moveTo = function(posX,posY){
-                    this.positionX = posX;
-                    this.positionY = posY;
-                    this.updateView();
-                };
-
-                this.move = function(deltaX,deltaY){
-                    this.positionX += deltaX;
-                    this.positionY += deltaY;
-                    this.updateView();
-
-                };
-
-                this.init = function () {
-                    $("#World").append("<img id='"+this.id+"'></div>");
-                    $("#"+this.id)  .attr("width",           "100px")
-                                    .attr("height",          "100px")
-                                    .attr("src",            this.sprite)
-                                    .css("margin-left",     this.positionX)
-                                    .css("margin-top",     this.positionY);
-                }
-
-
-            }
-
-            function Ennemy(id,startPositionX,startPositionY){
-
-
-            }
-
-            var world = new World();
-            var player = new Player("1",world.startPositionX(),world.startPositionY());
-            var ennemy = new Ennemy("2",0,0);
-            world.addPlayer(player);
-            world.addEnnemy(ennemy);
-            // What is keyPressed at this iteration
-            $("*").keydown(function(codeKey){
-                switch(codeKey.key){
-                    case "Up" :
-                        world.movingDirection[0] = 1;
-                        break;
-                    case "Down" :
-                        world.movingDirection[0] = -1;
-                        break;
-                    case "Right" :
-                        world.movingDirection[1] = 1;
-                        break;
-                    case "Left" :
-                        world.movingDirection[1] = -1;
-                        break;
-                    default :
-                        world.movingDirection[0] = 0;
-                        world.movingDirection[1] = 0;
-                        break;
-                }
-                console.log(codeKey.key);
-                console.log(world.movingDirection[0]);
-                if(world.movingDirection[0] != 0 || world.movingDirection[1] != 0){
-                    world.player.move(   world.movingDirection[0]*player.speed,
-                                        world.movingDirection[1]*player.speed);
-                    console.log(world.player);
-                }
-
-            });
-
-        });
-    </script>
-</body>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	</head>
+	<body>
+	
+		<h1> Samples</h1>
+		<a href="samples/smoothMovement.html"> samples/smoothMovement.html </a> </br>
+		<a href="samples/keyEvent.html"> samples/keyEvent.html </a>
+		
+		<h1> Programs </h1>
+		<a href="programs/game01.html"> programs/game01.html </a>
+	</body>
 </html>
