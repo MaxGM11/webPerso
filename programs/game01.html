@@ -12,6 +12,7 @@
     </div>
 
     <script>
+		"use strict";
         $("document").ready(function(){
             console.log('page loaded');
 
@@ -21,7 +22,7 @@
                 this.ennemies = new Array();
                 this.movingDirection = [0,0];
                 this.startPosition = [300,200];
-                $("#World") .css("background-image","url('images/background.png')")
+                $("#World") .css("background-image","url('../images/background.jpg')")
                             .css("width",           "1280")
                             .css("height",          "800");
 
@@ -58,7 +59,7 @@
                 this.ammo = 10;
                 this.height = 100;
                 this.width = 100;
-                this.sprite = "images/spaceship.png";
+                this.sprite = "../images/spaceship.png";
                 this.positionX = startPositionX;
                 this.positionY = startPositionY;
                 this.speed = 10;
