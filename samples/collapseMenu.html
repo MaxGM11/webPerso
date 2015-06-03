@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Key Events v1.0</title>
+    <title>Collapse Menu</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	
 	<style>
@@ -21,34 +21,33 @@
 			background-color:	pink;
 			border:				1px solid black;  /* For debug */
 		}
+		
+		#Top a:hover{
+			cursor: 			pointer;
+		}
 		#Bottom{
 			width:              150px;
 			height:             100px;
 			border:				1px solid black;
 			background-color:	#d3d3d3;
-			overflox:			auto;
+			overflow:			auto;
 			/*transition : 		background-color .1s ease;*/
 		}
 		
-		#keyIndicatorA		{margin:00px  50px;}
-		#keyIndicatorB		{margin:100px 50px;}
-		
 	</style>
 	<script>
-		function hide()
-		{
-			document.getElementById
+		function toggle(){
+			$("#Bottom").toggle();
 		}
 	</script>
 </head>
 <body>
 
-	<p>This sample illustrates how key events are managed in javascript
-	</p>
+	<p>This sample illustrates how to collapse a menu</p>
 
 	<div id="Main">
-		<div id="Top" ><a href="#" onClick="hide();">A</a></div>
-		<div id="Bottom">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB</div>
+		<div id="Top" ><a onClick="toggle();">Click to toggle</a></div>
+		<div id="Bottom">BBBBBBBBBBBBBBBBBBBBBBBBBBB</div>
 	</div>
 	
 
