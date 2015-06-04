@@ -5,11 +5,63 @@
 			body { margin: 0; }
 			canvas { width: 100%; height: 100% }
 		</style>
+		<script src="../js/three.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/keyboard.js"></script>
 	</head>
 	<body>
-		<script src="../js/three.min.js"></script>
-		<script>
-			// Our Javascript will go here.
+		<script type="text/javascript">
+			//"use strict";	
+			var keyboard = new Keyboard();
+			keyboard.addKeyListener(38,function(){
+				console.log ("[DBG] key listner working !!");
+			});
+			
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			console.log ( " window.innerWidth : " +window.innerWidth + "  window.innerHeight: " + window.innerHeight); 
+			document.body.appendChild( renderer.domElement );
+			
+			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+			var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			var cube = new THREE.Mesh( geometry, material );
+			//scene.add( cube );
+
+			camera.position.z = 5;
+			
+			var posInit	= [0,0,0];		// position initial
+			var v		= 1;			// vitesse initiale
+			var theta 	= 45;			// angle de tir
+			var g		= 9.81;			// constante de gravitation
+			var trajX 	= [];			// position de la trajectoire sur X en fonction du temps
+			var trajY 	= [];			// position de la trajectoire sur Y en fonction du temps
+			var trajZ 	= [];			// position de la trajectoire sur Z en fonction du temps
+			
+			var geometry = new THREE.Geometry();
+
+			for ( var i = 0 ; i < 10000 ; i++ ) {
+				var t = i/1.0;
+				trajX[i] = posInit[0] + v*Math.cos(theta)*t;
+				trajY[i] = posInit[1] + v*Math.cos(theta)*t - 0.5*g*t*t;
+				trajZ[i] = posInit[2] + v*Math.sin(theta)*t - 0.5*g*t*t;
+				
+				geometry.vertices.push(new THREE.Vector3( trajX[i], trajY[i], trajZ[i]));
+			}
+			geometry.computeBoundingSphere();
+			var pointCloud = new THREE.PointCloud(geometry);
+			scene.add( pointCloud);
+			
+			function render() {
+				requestAnimationFrame( render );
+				renderer.render( scene, camera );
+				pointCloud.rotation.x += 0.01;
+				pointCloud.rotation.y += 0.01;
+			}
+			render();
+			
 		</script>
 	</body>
 </html>
