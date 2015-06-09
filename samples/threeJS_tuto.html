@@ -13,11 +13,21 @@
 		<script type="text/javascript">
 			"use strict";	
 			var keyboard = new Keyboard();
-			keyboard.addKeyListener(38,function(){
+			keyboard.addKeyListener(38,function(){ // UP
 				console.log ("[DBG] key listner for UP !!");
+				pointCloud.rotation.x += 0.01;
 			},true);
-			keyboard.addKeyListener(39,function(){
+			keyboard.addKeyListener(39,function(){ // RIGHT
+				pointCloud.rotation.y -= 0.01;
 				console.log ("[DBG] key listner for RIGHT !!");
+			});
+			keyboard.addKeyListener(37,function(){ // LEFT
+				console.log ("[DBG] key listner for LEFT !!");
+				pointCloud.rotation.y += 0.01;
+			},true);
+			keyboard.addKeyListener(40,function(){ // DOWN
+				pointCloud.rotation.x -= 0.01;
+				console.log ("[DBG] key listner for DOWN !!");
 			});
 			
 			var scene = new THREE.Scene();
@@ -60,8 +70,8 @@
 			function render() {
 				requestAnimationFrame( render );
 				renderer.render( scene, camera );
-				pointCloud.rotation.x += 0.01;
-				pointCloud.rotation.y += 0.01;
+				//pointCloud.rotation.x += 0.01;
+				//pointCloud.rotation.y += 0.01;
 			}
 			render();
 			
