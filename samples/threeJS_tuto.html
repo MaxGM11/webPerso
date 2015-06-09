@@ -11,10 +11,13 @@
 	</head>
 	<body>
 		<script type="text/javascript">
-			//"use strict";	
+			"use strict";	
 			var keyboard = new Keyboard();
 			keyboard.addKeyListener(38,function(){
-				console.log ("[DBG] key listner working !!");
+				console.log ("[DBG] key listner for UP !!");
+			},true);
+			keyboard.addKeyListener(39,function(){
+				console.log ("[DBG] key listner for RIGHT !!");
 			});
 			
 			var scene = new THREE.Scene();
