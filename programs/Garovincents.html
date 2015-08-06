@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Garovincent</title>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/keyboard.js"></script>
+        <script type="text/javascript" src="../js/garovincents/collidable.js"></script>
+        <script type="text/javascript" src="../js/garovincents/movable.js"></script>
+        <script type="text/javascript" src="../js/garovincents/player.js"></script>
+        <script type="text/javascript" src="../js/garovincents/ennemy.js"></script>
+        <script type="text/javascript" src="../js/garovincents/map.js"></script>
+        <script type="text/javascript" src="../js/garovincents/renderer.js"></script>
+        <script type="text/javascript" src="../js/garovincents/gameLogic.js"></script>
+	</head>
+<body>
+
+<canvas id="myCanvas" width="400" height="300" style="border:1px solid black;">
+    Votre navigateur ne supporte pas canvas.
+</canvas>
+
+
+<script type="text/javascript">
+"use strict";
+
+window.onload = function()
+{
+    var canvas = document.getElementById("myCanvas");
+    if(!canvas)
+    {
+        alert("Impossible de récupérer le canvas");
+        return;
+    }
+    var renderer = new Renderer(canvas);
+    var gameLogic = new GameLogic();
+
+    gameLogic.init();
+    gameLogic.start();
+    
+}
+
+</script>
+
+</body>
+</html>
