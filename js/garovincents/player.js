@@ -4,6 +4,9 @@ var Player = function () {
 	this._godMode;
 }
 
+// Inheritence from entity
+Player.prototype = new Entity;
+
 Player.prototype.setPosition = function (position) {
 	if (position === undefined) {
 		console.log("Player::setPosition [ERROR] input parameter undefined");

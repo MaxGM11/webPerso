@@ -11,10 +11,17 @@ var Renderer = function (canvas) {
         console.log("Renderer::constructor [ERROR] not possible to get the 2d context");
         return;
     }
+    this._LoopId;
 
-        
 }
 
-Renderer.prototype.render = function() {
-	
+Renderer.prototype.render = function(framePerSecond) {
+	this._LoopId = setInterval(renderingLoop, 1000/framePerSecond);
+  
+  	var self = this;
+    function renderingLoop()
+    {
+    	console.log("Renderer::render rendering loop : new frame");
+    	self;
+    }
 }

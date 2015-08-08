@@ -1,15 +1,19 @@
 var Ennemy = function () {
-	this._position;
+	this._direction;
+	this._speed;
 }
 
-Ennemy.prototype.setPosition = function (position) {
-	if (position === undefined) {
-		console.log("Ennemy::setPosition [ERROR] input parameter undefined");
+// Inheritence from entity
+Ennemy.prototype = new Entity;
+
+Ennemy.prototype.setDirection = function (direction) {
+	if (direction === undefined) {
+		console.log("Ennemy::setDirection [ERROR] input parameter undefined");
 		return false;
 	}
-	this._position = position;
+	this._direction = direction;
 	return true;
 };
-Ennemy.prototype.getPosition = function (position) {
-	return this._position;
+Ennemy.prototype.getDirection = function (direction) {
+	return this._direction;
 };
