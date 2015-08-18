@@ -1,6 +1,10 @@
-var Map = function () {
+var Map = function (gameEngine) {
 	this._sizeX = 100;
 	this._sizeY = 100;
+    this._backgroundUrl;
+    this._backgroundColor;
+    this._gameEngine = gameEngine;
+
 };
 
 Map.prototype.setSize = function(x,y) {
@@ -37,3 +41,16 @@ Map.prototype.getCenter = function () {
 Map.prototype.getRandomPosition = function () {
 	return [this._sizeX/3,this._sizeY/7];
 };
+
+Map.prototype.setBackgroundUrl = function (urlBackground) {
+    this._backgroundUrl = urlBackground;
+}
+Map.prototype.setBackgroundColor = function (color) {
+    this._backgroundColor = color;
+}
+Map.prototype.render = function () {
+	var context = this._gameEngine._context;
+	context.fillStyle = this._backgroundColor;
+	context.fillRect(0,0,this._sizeX,this._sizeY);
+	
+}

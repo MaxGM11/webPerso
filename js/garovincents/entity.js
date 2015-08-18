@@ -1,7 +1,10 @@
-var Entity = function() {
+var Entity = function(name) {
+	console.log("Entity::Constructor : " + name);
 	this._resourceImg;
 	this._hitBox = [];
 	this._position;
+	this._name = name;
+
 }
 
 Entity.prototype.setResourceImg = function(imgName) {

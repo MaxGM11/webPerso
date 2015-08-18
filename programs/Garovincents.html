@@ -11,13 +11,15 @@
         <script type="text/javascript" src="../js/garovincents/ennemy.js"></script>
         <script type="text/javascript" src="../js/garovincents/map.js"></script>
         <script type="text/javascript" src="../js/garovincents/renderer.js"></script>
-        <script type="text/javascript" src="../js/garovincents/gameLogic.js"></script>
+        <script type="text/javascript" src="../js/garovincents/gameEngine.js"></script>
 	</head>
 <body>
 
 <canvas id="myCanvas" width="500" height="500" style="border:1px solid black;">
     Votre navigateur ne supporte pas canvas.
 </canvas>
+<img id="spaceShipImg" src="../images/spaceship.png" style="display:none;"/>
+<img id="heroImg" src="../images/garovincets/hero.png" style="display:none;"/>
 
 
 <script type="text/javascript">
@@ -31,12 +33,11 @@ window.onload = function()
         alert("Impossible de récupérer le canvas");
         return;
     }
-    var renderer = new Renderer(canvas);
-    var gameLogic = new GameLogic();
+    var gameEngine = new GameEngine();
 
-    gameLogic.init();
-    gameLogic.setRenderer(renderer);
-    gameLogic.start();
+    gameEngine.init();
+    gameEngine.setRendereringParameters(canvas);
+    gameEngine.start();
     
 }
 
