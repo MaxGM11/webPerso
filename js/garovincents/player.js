@@ -35,7 +35,8 @@ var Player = function (gameEngine) {
 }
 
 // Inheritence from entity
-Player.prototype = Entity.prototype;
+//Player.prototype = Entity.prototype;
+Player.prototype = Object.create(Entity.prototype);
 // Player.prototype = new Entity;
 
 Player.prototype.setPosition = function (position) {

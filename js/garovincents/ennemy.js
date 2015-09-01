@@ -7,7 +7,8 @@ var Ennemy = function (gameEngine) {
 }
 
 // Inheritence from entity
-Ennemy.prototype = Entity.prototype;
+//Ennemy.prototype = Entity.prototype;
+Ennemy.prototype = Object.create(Entity.prototype);
 
 Ennemy.prototype.setDirection = function (direction) {
 	if (direction === undefined) {
