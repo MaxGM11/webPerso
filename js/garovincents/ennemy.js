@@ -65,9 +65,9 @@ Ennemy.prototype.getName = function (name) {
 
 
 
-Ennemy.prototype.render = function (gameEngine) {
+Ennemy.prototype.render = function () {
 
-	var context = gameEngine._context;
+	var context = this._gameEngine._context;
 
 	var img=document.getElementById("spaceShipImg");
 	var pat=context.createPattern(img,"no-repeat");

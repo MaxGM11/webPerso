@@ -10,6 +10,7 @@
         <script type="text/javascript" src="../js/garovincents/player.js"></script>
         <script type="text/javascript" src="../js/garovincents/ennemy.js"></script>
         <script type="text/javascript" src="../js/garovincents/map.js"></script>
+        <script type="text/javascript" src="../js/garovincents/menu.js"></script>
         <script type="text/javascript" src="../js/garovincents/renderer.js"></script>
         <script type="text/javascript" src="../js/garovincents/gameEngine.js"></script>
 	</head>
@@ -35,8 +36,8 @@ window.onload = function()
     }
     var gameEngine = new GameEngine();
 
-    gameEngine.init();
     gameEngine.setRendereringParameters(canvas);
+    gameEngine.init();
     gameEngine.start();
     
 }

@@ -1,19 +1,44 @@
 var GameEngine = function() {
 	this._player;
 	this._ennemy = [];
-	this._map;
+    this._map;
+    this._menu;
 	this._canvas;
     this._context;
     this._renderingLoopId
     this._backgroundColor;
-
+    this._pause = true;
 
 }
 GameEngine.prototype.init = function() {
 
-	this._map = new Map(this);
-	this._map.setSize(300,300);
-	this._map.setBackgroundColor("#AAAAAA");
+    var self = this;
+
+    this._map = new Map(this);
+    this._map.setSize(500,500);
+    this._map.setBackgroundColor("#AAAAAA");
+
+    this._menu = new Menu(this);
+    this._menu.activate();
+
+    this._menu.addButton({
+        name:"Start",
+        callbackFct:function(){
+            console.log("Start button clicked");
+            self._pause = false;
+            self._menu.deactivate();
+            self.startGame();
+        }
+    });
+
+    this._menu.addButton({
+        name:"Prout",
+        callbackFct:function(){
+            console.log("Exit button clicked");
+            alert("prout");
+        }
+    });
+
 
 	this._player = new Player(this);
 	this._player.setPosition(this._map.getCenter());
@@ -60,6 +85,8 @@ GameEngine.prototype.init = function() {
     ennemy4.setDirection([0,1]);
 	this._ennemy.push(ennemy4);
 
+    this._pause = true;
+
 }
 
 
@@ -83,33 +110,19 @@ GameEngine.prototype.setRendereringParameters = function(canvas) {
 GameEngine.prototype.start = function() {
     var self = this;
 
-	// Start the game
-	var myInterval = setInterval(loop, 5000);
-    function loop()
-    {
-        console.log("GameEngine::loop randomize ennemies");
-        for (var i = 0 ;  i < self._ennemy.length ; i++) {
-            // Random -3 / 3 : (Math.random() - 0.5)*6.0
-            self._ennemy[i].setDirection ([(Math.random() - 0.5)*6.0,(Math.random() - 0.5)*6.0]);
-            self._ennemy[i].setSpeed(Math.random() * 3.0);
-        }
-
-    }
-
     // Start the renderer
 	this._renderingLoopId = setInterval(renderingLoop, 1000/30);
-
-    // Start ennemies
-    for (var i = 0 ;  i < this._ennemy.length ; i++) {
-        this._ennemy[i].start();
-    }
-
-    this._player.start();
-
 
     function renderingLoop()
     {
     	console.log("GameEngine::renderingLoop : new frame");
+
+        // Render the menu
+        self._menu.render();
+
+        // check if game is paused
+        if(self._pause === true)
+            return;
 
         // detect loose condition
         for (var i = 0 ;  i < self._ennemy.length ; i++) {
@@ -127,7 +140,7 @@ GameEngine.prototype.start = function() {
 
         // render ennemies
 		for (var i = 0 ;  i < self._ennemy.length ; i++) {
-			self._ennemy[i].render(self);
+			self._ennemy[i].render();
         }
         
         // render player
@@ -141,3 +154,29 @@ GameEngine.prototype.debug = function() {
 	console.log("GameEngine::debug a message from GameEngine !")
 }
 
+GameEngine.prototype.startGame = function() {
+    // Start the game
+    var self = this;
+
+    // Start ennemies
+    for (var i = 0 ;  i < this._ennemy.length ; i++) {
+        this._ennemy[i].start();
+    }
+    // Start Player
+    this._player.start();
+
+    var myInterval = setInterval(gameLoop, 5000);
+    function gameLoop() {
+
+        if(self._pause === true)
+            return;
+
+        console.log("GameEngine::loop randomize ennemies");
+        for (var i = 0 ;  i < self._ennemy.length ; i++) {
+            // Random -3 / 3 : (Math.random() - 0.5)*6.0
+            self._ennemy[i].setDirection ([(Math.random() - 0.5)*6.0,(Math.random() - 0.5)*6.0]);
+            self._ennemy[i].setSpeed(1 + Math.random() * 3.0);
+        }
+
+    }
+}
