@@ -10,25 +10,25 @@ var Player = function (gameEngine) {
 
     var self = this;
 	this._keyboardController.addKeyListener(38,function(){ // UP
-		console.log ("[DBG] key listner for UP !!");
+		//console.log ("[DBG] key listner for UP !!");
 		if (self._position[1] - self._speed > 0)
 			self._position[1] = self._position[1] - self._speed;
 	},true);
 
 	this._keyboardController.addKeyListener(39,function(){ // RIGHT
-		console.log ("[DBG] key listner for RIGHT !!");
+		//console.log ("[DBG] key listner for RIGHT !!");
 		if (self._position[0] + self._speed < self._gameEngine._map.getSizeX() - self._hitBox[0])
 		self._position[0] = self._position[0] + self._speed;
 	});
 
 	this._keyboardController.addKeyListener(37,function(){ // LEFT
-		console.log ("[DBG] key listner for LEFT !!");
+		//console.log ("[DBG] key listner for LEFT !!");
 		if (self._position[0] - self._speed > 0)
 			self._position[0] = self._position[0] - self._speed;
 	},true);
 
 	this._keyboardController.addKeyListener(40,function(){ // DOWN
-		console.log ("[DBG] key listner for DOWN !!");
+		//console.log ("[DBG] key listner for DOWN !!");
 		if (self._position[1] + self._speed < self._gameEngine._map.getSizeY() - self._hitBox[1])
 			self._position[1] = self._position[1] + self._speed;
 	});
@@ -80,13 +80,25 @@ Player.prototype.getLife = function (life) {
 	return this._life;
 };
 
-Player.prototype.render = function(gameEngine) {
+Player.prototype.render = function() {
 
-	var context = gameEngine._context;
+	var context = this._gameEngine._context;
+	context.save();
+	context.translate(this._position[0] + 0.5*this._hitBox[0],this._position[1] + 0.5*this._hitBox[0]);
+	context.rotate(this._rotation);
 
 	var img=document.getElementById("heroImg");
-	var pat=context.createPattern(img,"no-repeat");
-	context.drawImage(img,this._position[0],this._position[1],this._hitBox[0],this._hitBox[1]);
+	//var pat=context.createPattern(img,"no-repeat");
+	context.drawImage(img,-0.5*this._hitBox[0],-0.5*this._hitBox[1],this._hitBox[0],this._hitBox[1]);
+	context.restore();
+	if(this._gameEngine._debug) {
+		context.beginPath();
+		context.strokeStyle="red";
+		context.rect(this._position[0],this._position[1],this._hitBox[0],this._hitBox[1]);
+		context.stroke();
+	}
+
+
 };
 Player.prototype.start = function () {
 
@@ -97,8 +109,15 @@ Player.prototype.start = function () {
   	var self = this;
     function runningLoop()
     {
-		console.log("Player::runningLoop : new state");
-
+		var targetRotation = self._rotation + self._rotationSpeed * self._rotationDirection
+		console.log(targetRotation);
+		if (targetRotation >= 0.8 || targetRotation <= -0.8) {
+			self._rotation += -1 * self._rotationSpeed * self._rotationDirection;
+			self._rotationDirection *= -1;
+		}
+		else {
+			self._rotation = targetRotation;
+		}
 		// compute target position
 
     }

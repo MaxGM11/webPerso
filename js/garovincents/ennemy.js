@@ -71,7 +71,14 @@ Ennemy.prototype.render = function () {
 
 	var img=document.getElementById("spaceShipImg");
 	var pat=context.createPattern(img,"no-repeat");
-	context.drawImage(img,this._position[0],this._position[1],this._hitBox[0],this._hitBox[1]);
+	context.drawImage(img,this._position[0]-10,this._position[1]-10,this._hitBox[0]+20,this._hitBox[1]+20);
+
+	if(this._gameEngine._debug) {
+		context.beginPath();
+		context.strokeStyle="red";
+		context.rect(this._position[0],this._position[1],this._hitBox[0],this._hitBox[1]);
+		context.stroke();
+	}
 }
 Ennemy.prototype.start = function () {
 
@@ -82,7 +89,7 @@ Ennemy.prototype.start = function () {
   	var self = this;
     function runningLoop()
     {
-		console.log("Ennemy::runningLoop " + this._name + " : new state");
+		//console.log("Ennemy::runningLoop " + self._name + " : new state");
 
 		// compute target position
 		var targetPositionX = self._position[0] + self._direction[0] * self._speed;

@@ -57,7 +57,7 @@ Menu.prototype.render = function () {
 	if (this._activated) {
 		var self = this;
 		this._buttons.forEach(function(button){
-			console.log("Rendering button :" + button);
+			//console.log("Rendering button :" + button);
 			context.fillStyle = "#00FF00";
 			context.fillRect(button.size[0],button.size[1],button.size[2],button.size[3]);
 			context.fillStyle = "#000000";

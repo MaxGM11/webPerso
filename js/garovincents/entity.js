@@ -1,10 +1,13 @@
 var Entity = function(name) {
 	console.log("Entity::Constructor : " + name);
 	this._resourceImg;
-	this._hitBox = [];
+	this._hitBox 			= [];
 	this._position;
-	this._name = name;
-	this._modified = true;
+	this._rotationDirection = 1;
+	this._rotationSpeed 	= 0.2;
+	this._rotation 			= 0;
+	this._name 				= name;
+	this._modified 			= true;
 
 }
 

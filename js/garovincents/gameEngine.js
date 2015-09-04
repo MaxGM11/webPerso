@@ -8,6 +8,7 @@ var GameEngine = function() {
     this._renderingLoopId
     this._backgroundColor;
     this._pause = true;
+    this._debug = false;
 
 }
 GameEngine.prototype.init = function() {
@@ -115,7 +116,7 @@ GameEngine.prototype.start = function() {
 
     function renderingLoop()
     {
-    	console.log("GameEngine::renderingLoop : new frame");
+    	//console.log("GameEngine::renderingLoop : new frame");
 
         // Render the menu
         self._menu.render();
@@ -127,7 +128,7 @@ GameEngine.prototype.start = function() {
         // detect loose condition
         for (var i = 0 ;  i < self._ennemy.length ; i++) {
             if (self._player.collided(self._ennemy[i])) {
-                console.log("GameEngine::renderingLoop : LOOSE");
+                //console.log("GameEngine::renderingLoop : LOOSE");
                 clearInterval(self._renderingLoopId);
             }
         }
@@ -151,7 +152,7 @@ GameEngine.prototype.start = function() {
 }
 
 GameEngine.prototype.debug = function() {
-	console.log("GameEngine::debug a message from GameEngine !")
+	//console.log("GameEngine::debug a message from GameEngine !")
 }
 
 GameEngine.prototype.startGame = function() {
@@ -171,7 +172,7 @@ GameEngine.prototype.startGame = function() {
         if(self._pause === true)
             return;
 
-        console.log("GameEngine::loop randomize ennemies");
+        //console.log("GameEngine::loop randomize ennemies");
         for (var i = 0 ;  i < self._ennemy.length ; i++) {
             // Random -3 / 3 : (Math.random() - 0.5)*6.0
             self._ennemy[i].setDirection ([(Math.random() - 0.5)*6.0,(Math.random() - 0.5)*6.0]);

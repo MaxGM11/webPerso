@@ -14,7 +14,7 @@ Keyboard.prototype.addKeyListener = function(keyCode,callbackFunction,allowRepea
 	allowRepeat = typeof allowRepeat !== "undefined" ? allowRepeat : true;
 	
 	this._repeatableKey[keyCode] = allowRepeat;
-	console.log ("[DBG] key listener for " + keyCode + " (repeat : " + allowRepeat + ")");
+	//console.log ("[DBG] key listener for " + keyCode + " (repeat : " + allowRepeat + ")");
 	var self = this;
 	$("*").keydown(function(codeKey){
 		if (codeKey.keyCode === keyCode) {
@@ -25,7 +25,7 @@ Keyboard.prototype.addKeyListener = function(keyCode,callbackFunction,allowRepea
 				if(self._repeatableKey[keyCode]) {
 					callbackFunction();
 					self._repeatableKeyTimeOutID[keyCode] = setInterval(callbackFunction,17);
-					console.log("[DBG] Started process for " + keyCode + " with id : " + self._repeatableKeyTimeOutID[keyCode]);
+					//console.log("[DBG] Started process for " + keyCode + " with id : " + self._repeatableKeyTimeOutID[keyCode]);
 				}else{ // If he doesn't want it to be repeatable
 					callbackFunction();
 				}
@@ -42,7 +42,7 @@ Keyboard.prototype.addKeyListener = function(keyCode,callbackFunction,allowRepea
 			// If the user allow the key  to be repeated
 			if(self._repeatableKey[keyCode]) {
 				clearTimeout(self._repeatableKeyTimeOutID[keyCode]);
-				console.log("[DBG] Ended process for " + keyCode + " with id : " + self._repeatableKeyTimeOutID[keyCode]);
+				//console.log("[DBG] Ended process for " + keyCode + " with id : " + self._repeatableKeyTimeOutID[keyCode]);
 			}
 		}
 	});

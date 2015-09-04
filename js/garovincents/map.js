@@ -21,7 +21,7 @@ Map.prototype.setSizeY = function(y) {
 };
 
 Map.prototype.getSize = function() {
-	console.log("Map::getCenter size of map [" + this.sizeX + "'" + this.sizeY + "]");
+	//console.log("Map::getCenter size of map [" + this.sizeX + "'" + this.sizeY + "]");
 	return [this._sizeX,this._sizeY];
 };
 
@@ -34,7 +34,7 @@ Map.prototype.getSizeY = function() {
 };
 
 Map.prototype.getCenter = function () {
-	console.log("Map::getCenter center of map [" + this._sizeX/2 + "'" + this._sizeY/2 + "]");
+	//console.log("Map::getCenter center of map [" + this._sizeX/2 + "'" + this._sizeY/2 + "]");
 	return [this._sizeX/2,this._sizeY/2];
 };
 
