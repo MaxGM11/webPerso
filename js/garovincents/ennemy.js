@@ -68,11 +68,26 @@ Ennemy.prototype.getName = function (name) {
 Ennemy.prototype.render = function () {
 
 	var context = this._gameEngine._context;
+	context.save();
 
-	var img=document.getElementById("spaceShipImg");
+	// Rotation if any
+	context.translate(this._position[0] + 0.5*this._hitBox[0],this._position[1] + 0.5*this._hitBox[0]);
+	var rot = Math.acos(this._direction[1]/Math.sqrt(this._direction[1]*this._direction[1] + this._direction[0]*this._direction[0]));
+	if (this._direction[1] > 0)
+		context.rotate(rot);
+	else
+		context.rotate(2*Math.PI - rot);
+	//console.log(this._name + " rot : " + rot);
+
+	// Draw image
+	var img=document.getElementById("wespImg");
 	var pat=context.createPattern(img,"no-repeat");
-	context.drawImage(img,this._position[0]-10,this._position[1]-10,this._hitBox[0]+20,this._hitBox[1]+20);
+	context.drawImage(img,-10,-10,this._hitBox[0]+20,this._hitBox[1]+20);
 
+
+	context.restore();
+	
+	// Draw hit box if debug mode
 	if(this._gameEngine._debug) {
 		context.beginPath();
 		context.strokeStyle="red";

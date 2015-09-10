@@ -7,6 +7,7 @@ var Player = function (gameEngine) {
     this._gameEngine = gameEngine;
     this._keyboardController = new Keyboard();
     this._runningLoop;
+    this._animationState = 0;
 
     var self = this;
 	this._keyboardController.addKeyListener(38,function(){ // UP
@@ -84,13 +85,26 @@ Player.prototype.render = function() {
 
 	var context = this._gameEngine._context;
 	context.save();
+
+	// Rotation if any
 	context.translate(this._position[0] + 0.5*this._hitBox[0],this._position[1] + 0.5*this._hitBox[0]);
 	context.rotate(this._rotation);
 
+	// Draw image with animation
 	var img=document.getElementById("heroImg");
 	//var pat=context.createPattern(img,"no-repeat");
-	context.drawImage(img,-0.5*this._hitBox[0],-0.5*this._hitBox[1],this._hitBox[0],this._hitBox[1]);
+	if (this._animationState == 1) {
+		//console.log(this._animationState);
+		context.drawImage(img,0,0,969,1938,-0.5*this._hitBox[0],-0.5*this._hitBox[1],this._hitBox[0],this._hitBox[1]);
+	}
+	else {
+		//console.log(this._animationState);
+		context.drawImage(img,969,0,969,1938,-0.5*this._hitBox[0],-0.5*this._hitBox[1],this._hitBox[0],this._hitBox[1]);
+	}
+
 	context.restore();
+
+	// Draw hit box if debug mode
 	if(this._gameEngine._debug) {
 		context.beginPath();
 		context.strokeStyle="red";
@@ -107,10 +121,11 @@ Player.prototype.start = function () {
 	this._runningLoop = setInterval(runningLoop, 1000/30);
 
   	var self = this;
+  	var delta = 300;
     function runningLoop()
     {
 		var targetRotation = self._rotation + self._rotationSpeed * self._rotationDirection
-		console.log(targetRotation);
+		//console.log(targetRotation);
 		if (targetRotation >= 0.8 || targetRotation <= -0.8) {
 			self._rotation += -1 * self._rotationSpeed * self._rotationDirection;
 			self._rotationDirection *= -1;
@@ -119,6 +134,11 @@ Player.prototype.start = function () {
 			self._rotation = targetRotation;
 		}
 		// compute target position
+		delta += 1000/30;
+		if (delta > 300) {
+			self._animationState = (self._animationState + 1) % 2;
+			delta -= 500;
+		}
 
     }
 }

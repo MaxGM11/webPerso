@@ -5,10 +5,11 @@ var GameEngine = function() {
     this._menu;
 	this._canvas;
     this._context;
-    this._renderingLoopId
+    this._renderingLoopId;
+    this._gameLoopId;
     this._backgroundColor;
     this._pause = true;
-    this._debug = false;
+    this._debug = true;
 
 }
 GameEngine.prototype.init = function() {
@@ -43,7 +44,7 @@ GameEngine.prototype.init = function() {
 
 	this._player = new Player(this);
 	this._player.setPosition(this._map.getCenter());
-	this._player.setHitBox([40,40]);
+	this._player.setHitBox([60,60]);
     this._player.setSpeed(4);
 
     var ennemy0 = new Ennemy(this);
@@ -125,14 +126,6 @@ GameEngine.prototype.start = function() {
         if(self._pause === true)
             return;
 
-        // detect loose condition
-        for (var i = 0 ;  i < self._ennemy.length ; i++) {
-            if (self._player.collided(self._ennemy[i])) {
-                //console.log("GameEngine::renderingLoop : LOOSE");
-                clearInterval(self._renderingLoopId);
-            }
-        }
-
     	// clear the canvas
     	self._context.clearRect(0, 0, self._canvas.width, self._canvas.height);
 
@@ -166,17 +159,33 @@ GameEngine.prototype.startGame = function() {
     // Start Player
     this._player.start();
 
-    var myInterval = setInterval(gameLoop, 5000);
+    this._gameLoopId = setInterval(gameLoop, 1000/30);
+
+    var deltaNewDirectionEnnemies = 0;
     function gameLoop() {
+
+        deltaNewDirectionEnnemies += 1000/30
 
         if(self._pause === true)
             return;
 
-        //console.log("GameEngine::loop randomize ennemies");
+        // detect loose condition
         for (var i = 0 ;  i < self._ennemy.length ; i++) {
-            // Random -3 / 3 : (Math.random() - 0.5)*6.0
-            self._ennemy[i].setDirection ([(Math.random() - 0.5)*6.0,(Math.random() - 0.5)*6.0]);
-            self._ennemy[i].setSpeed(1 + Math.random() * 3.0);
+            if (self._player.collided(self._ennemy[i])) {
+                //console.log("GameEngine::renderingLoop : LOOSE");
+                clearInterval(self._gameLoopId);
+                self._pause = true;
+            }
+        }
+
+        //console.log("GameEngine::loop randomize ennemies");
+        if (deltaNewDirectionEnnemies > 5000) {
+            for (var i = 0 ;  i < self._ennemy.length ; i++) {
+                // Random -3 / 3 : (Math.random() - 0.5)*6.0
+                self._ennemy[i].setDirection ([(Math.random() - 0.5)*6.0,(Math.random() - 0.5)*6.0]);
+                self._ennemy[i].setSpeed(1 + Math.random() * 3.0);
+            }
+            deltaNewDirectionEnnemies -= 5000;
         }
 
     }
