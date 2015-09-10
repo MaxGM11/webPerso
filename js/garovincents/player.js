@@ -93,13 +93,23 @@ Player.prototype.render = function() {
 	// Draw image with animation
 	var img=document.getElementById("heroImg");
 	//var pat=context.createPattern(img,"no-repeat");
+	var sizePicture = 0.7;
 	if (this._animationState == 1) {
-		//console.log(this._animationState);
-		context.drawImage(img,0,0,969,1938,-0.5*this._hitBox[0],-0.5*this._hitBox[1],this._hitBox[0],this._hitBox[1]);
+		context.drawImage(	img,0,0,img.width/2,img.height,
+							-sizePicture*this._hitBox[0],
+							-sizePicture*this._hitBox[1],
+							2*sizePicture*this._hitBox[0],
+							2*sizePicture*this._hitBox[1]
+		);
 	}
 	else {
-		//console.log(this._animationState);
-		context.drawImage(img,969,0,969,1938,-0.5*this._hitBox[0],-0.5*this._hitBox[1],this._hitBox[0],this._hitBox[1]);
+
+		context.drawImage(	img,img.width/2,0,img.width/2,img.height,
+							-sizePicture*this._hitBox[0],
+							-sizePicture*this._hitBox[1],
+							2*sizePicture*this._hitBox[0],
+							2*sizePicture*this._hitBox[1]
+		);
 	}
 
 	context.restore();

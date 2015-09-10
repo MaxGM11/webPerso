@@ -44,7 +44,7 @@ GameEngine.prototype.init = function() {
 
 	this._player = new Player(this);
 	this._player.setPosition(this._map.getCenter());
-	this._player.setHitBox([60,60]);
+	this._player.setHitBox([50,50]);
     this._player.setSpeed(4);
 
     var ennemy0 = new Ennemy(this);
@@ -58,7 +58,7 @@ GameEngine.prototype.init = function() {
     var ennemy1 = new Ennemy(this);
     ennemy1.setPosition([80,20]);
     ennemy1.setName("Ennemy1");
-	ennemy1.setHitBox([40,40]);
+	ennemy1.setHitBox([80,80]);
     ennemy1.setSpeed(1);
     ennemy1.setDirection([2,1]);
 	this._ennemy.push(ennemy1);
@@ -66,7 +66,7 @@ GameEngine.prototype.init = function() {
     var ennemy2 = new Ennemy(this);
     ennemy2.setPosition([150,30]);
     ennemy2.setName("Ennemy2");
-	ennemy2.setHitBox([40,40]);
+	ennemy2.setHitBox([20,20]);
     ennemy2.setSpeed(2);
     ennemy2.setDirection([0,1]);
 	this._ennemy.push(ennemy2);
@@ -76,15 +76,15 @@ GameEngine.prototype.init = function() {
     ennemy3.setName("Ennemy3");
 	ennemy3.setHitBox([40,40]);
     ennemy3.setSpeed(2);
-    ennemy3.setDirection([0,1]);
+    ennemy3.setDirection([1,1]);
 	this._ennemy.push(ennemy3);
 	
     var ennemy4 = new Ennemy(this);
     ennemy4.setPosition([150,30]);
     ennemy4.setName("Ennemy4");
-	ennemy4.setHitBox([40,40]);
+	ennemy4.setHitBox([30,30]);
     ennemy4.setSpeed(2);
-    ennemy4.setDirection([0,1]);
+    ennemy4.setDirection([-1,1]);
 	this._ennemy.push(ennemy4);
 
     this._pause = true;
