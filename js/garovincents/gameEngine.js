@@ -51,7 +51,7 @@ GameEngine.prototype.init = function() {
     ennemy0.setPosition([10,10]);
     ennemy0.setName("Ennemy0");
     ennemy0.setHitBox([40,40]);
-    ennemy0.setSpeed(3);
+    ennemy0.setSpeed(1);
     ennemy0.setDirection([-1,3]);
     this._ennemy.push(ennemy0);
 
@@ -170,6 +170,7 @@ GameEngine.prototype.startGame = function() {
             return;
 
         // detect loose condition
+        
         for (var i = 0 ;  i < self._ennemy.length ; i++) {
             if (self._player.collided(self._ennemy[i])) {
                 //console.log("GameEngine::renderingLoop : LOOSE");
@@ -177,13 +178,14 @@ GameEngine.prototype.startGame = function() {
                 self._pause = true;
             }
         }
+        
 
         //console.log("GameEngine::loop randomize ennemies");
         if (deltaNewDirectionEnnemies > 5000) {
             for (var i = 0 ;  i < self._ennemy.length ; i++) {
                 // Random -3 / 3 : (Math.random() - 0.5)*6.0
                 self._ennemy[i].setDirection ([(Math.random() - 0.5)*6.0,(Math.random() - 0.5)*6.0]);
-                self._ennemy[i].setSpeed(1 + Math.random() * 3.0);
+                self._ennemy[i].setSpeed(1 + Math.random() * 1.0);
             }
             deltaNewDirectionEnnemies -= 5000;
         }
