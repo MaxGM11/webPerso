@@ -1,6 +1,6 @@
 var Fulgator = function (gameEngine) {
-	this._loadMax = 10000
-	this._load = 5000;
+	this._loadMax = 1000
+	this._load = 700;
 	this._direction = [];
 	this._target = [];
 	this._position = [];

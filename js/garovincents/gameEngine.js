@@ -52,7 +52,7 @@ GameEngine.prototype.init = function() {
     for (var i = 0; i <= monsterCount; i++) {
         var ennemy = new Ennemy(this);
         ennemy.setPosition([(this._map.getSizeX()-50)*Math.random(),100*Math.random()]);
-        ennemy.setName("ennemy");
+        ennemy.setName("ennemy"+i);
         var size = 10 + 20*Math.random();
         var life = 100 * size;
         ennemy.setHitBox([size,size]);
