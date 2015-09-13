@@ -9,7 +9,7 @@ var GameEngine = function() {
     this._gameLoopId;
     this._backgroundColor;
     this._pause = true;
-    this._debug = true;
+    this._debug = false;
 
 }
 GameEngine.prototype.init = function() {
@@ -17,7 +17,8 @@ GameEngine.prototype.init = function() {
     var self = this;
 
     this._map = new Map(this);
-    this._map.setSize(500,500);
+    //this._map.setSize($("#myCanvas").width,$("#myCanvas").height);
+    this._map.setSize(800,500);
     this._map.setBackgroundColor("#AAAAAA");
 
     this._menu = new Menu(this);
@@ -44,62 +45,54 @@ GameEngine.prototype.init = function() {
 
 	this._player = new Player(this);
 	this._player.setPosition(this._map.getCenter());
-	this._player.setHitBox([50,50]);
+	this._player.setHitBox([35,35]);
     this._player.setSpeed(4);
 
-    var ennemy0 = new Ennemy(this);
-    ennemy0.setPosition([10,10]);
-    ennemy0.setName("Ennemy0");
-    ennemy0.setHitBox([40,40]);
-    ennemy0.setSpeed(1);
-    ennemy0.setDirection([-1,3]);
-    this._ennemy.push(ennemy0);
+    var monsterCount = 30
+    for (var i = 0; i <= monsterCount; i++) {
+        var ennemy = new Ennemy(this);
+        ennemy.setPosition([(this._map.getSizeX()-50)*Math.random(),100*Math.random()]);
+        ennemy.setName("ennemy");
+        var size = 10 + 20*Math.random();
+        var life = 100 * size;
+        ennemy.setHitBox([size,size]);
+        ennemy.setSpeed(1 + Math.random()*2);
+        ennemy.setLife(life);
+        ennemy.setLifeMax(life);
+        ennemy.setDirection([0,1]);
+        this._ennemy.push(ennemy);
+    };
 
-    var ennemy1 = new Ennemy(this);
-    ennemy1.setPosition([80,20]);
-    ennemy1.setName("Ennemy1");
-	ennemy1.setHitBox([80,80]);
-    ennemy1.setSpeed(1);
-    ennemy1.setDirection([2,1]);
-	this._ennemy.push(ennemy1);
-	
-    var ennemy2 = new Ennemy(this);
-    ennemy2.setPosition([150,30]);
-    ennemy2.setName("Ennemy2");
-	ennemy2.setHitBox([20,20]);
-    ennemy2.setSpeed(2);
-    ennemy2.setDirection([0,1]);
-	this._ennemy.push(ennemy2);
-	
-    var ennemy3 = new Ennemy(this);
-    ennemy3.setPosition([150,30]);
-    ennemy3.setName("Ennemy3");
-	ennemy3.setHitBox([40,40]);
-    ennemy3.setSpeed(2);
-    ennemy3.setDirection([1,1]);
-	this._ennemy.push(ennemy3);
-	
-    var ennemy4 = new Ennemy(this);
-    ennemy4.setPosition([150,30]);
-    ennemy4.setName("Ennemy4");
-	ennemy4.setHitBox([30,30]);
-    ennemy4.setSpeed(2);
-    ennemy4.setDirection([-1,1]);
-	this._ennemy.push(ennemy4);
 
     this._pause = true;
 
 }
 
 
+GameEngine.prototype.removeEnnemy = function(name) {
+
+    if (name === undefined) {
+        console.log("GameEngine::removeEnnemy [ERROR] input parameter undefined");
+        return false;
+    }
+
+    for (var i = 0 ;  i < this._ennemy.length ; i++) {
+        if (this._ennemy[i].getName () === name) {
+            this._ennemy.splice(i,1);
+            console.log("Ennemy "+name+" removed from game")
+            return;
+        }
+    }
+}
+
 GameEngine.prototype.setRendereringParameters = function(canvas) {
 
-	if (canvas === undefined) {
-		console.log("GameEngine::setRendereringParameters [ERROR] input parameter undefined");
-		return false;
-	}
+    if (canvas === undefined) {
+        console.log("GameEngine::setRendereringParameters [ERROR] input parameter undefined");
+        return false;
+    }
 
-	this._canvas = canvas;
+    this._canvas = canvas;
     this._context = canvas.getContext("2d");
     if(!this._context)
     {
@@ -170,15 +163,37 @@ GameEngine.prototype.startGame = function() {
             return;
 
         // detect loose condition
-        
         for (var i = 0 ;  i < self._ennemy.length ; i++) {
-            if (self._player.collided(self._ennemy[i])) {
-                //console.log("GameEngine::renderingLoop : LOOSE");
-                clearInterval(self._gameLoopId);
-                self._pause = true;
+            if (self._ennemy[i].getLife() > 0) {
+                if (self._player.collided(self._ennemy[i])) {
+                    //console.log("GameEngine::renderingLoop : LOOSE");
+                    clearInterval(self._gameLoopId);
+                    self._pause = true;
+                }
             }
         }
         
+        // manage fulgator firing
+        if (self._player.isFiring()) {
+            for (var i = 0 ;  i < self._ennemy.length ; i++) {
+                if (self._ennemy[i].getLife() > 0 && (
+                    self._player.isInRange(self._ennemy[i].getPosition())                                           ||
+
+                    self._player.isInRange([self._ennemy[i].getPosition()[0] + self._ennemy[i].getHitBox()[0],
+                                            self._ennemy[i].getPosition()[1]                                    ])  ||
+
+                    self._player.isInRange([self._ennemy[i].getPosition()[0]                                 ,
+                                            self._ennemy[i].getPosition()[1] + self._ennemy[i].getHitBox()[1]   ])  ||
+
+                    self._player.isInRange([self._ennemy[i].getPosition()[0] + self._ennemy[i].getHitBox()[0],
+                                            self._ennemy[i].getPosition()[1] + self._ennemy[i].getHitBox()[1]   ])
+                )) {
+                    self._ennemy[i].damage(100);
+                    self._ennemy[i].startTouchedAnimation();
+                }
+            }
+        }
+
 
         //console.log("GameEngine::loop randomize ennemies");
         if (deltaNewDirectionEnnemies > 5000) {

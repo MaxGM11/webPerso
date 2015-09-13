@@ -5,22 +5,23 @@ var Menu = function (gameEngine) {
     this._activated = false;
     this._buttonWidthRatio 	= 0.7;
 	this._buttonHeightRatio = 0.1;
-
-	var self = this;
-	this._gameEngine._canvas.addEventListener('click',function(event){
+	this._filterClickFct = function(event){
 		var cursorX = event.pageX - self._gameEngine._canvas.offsetLeft,
 	        cursorY = event.pageY - self._gameEngine._canvas.offsetTop;
 	    console.log("Click event in " + cursorX + "," +cursorY);
 
-    	// list button and see if one is clicked
-    	self._buttons.forEach(function(button){
-    		if ( cursorX >= button.size[0] && cursorX <= button.size[0] + button.size[2] &&
-    			 cursorY >= button.size[1] && cursorY <= button.size[1] + button.size[3]) {
-    			button.callbackFct();
-    		}
-    	});
+		// list button and see if one is clicked
+		self._buttons.forEach(function(button){
+			if ( cursorX >= button.size[0] && cursorX <= button.size[0] + button.size[2] &&
+				 cursorY >= button.size[1] && cursorY <= button.size[1] + button.size[3]) {
+				button.callbackFct();
+			}
+		});
+	}
 
-	});
+	var self = this;
+	this._gameEngine._canvas.addEventListener('click',this._filterClickFct);
+
 
 }
 
@@ -76,5 +77,6 @@ Menu.prototype.activate = function () {
 
 Menu.prototype.deactivate = function () {
 	console.log("Menu::deactivate menu deactivated");
+	this._gameEngine._canvas.removeEventListener('click',this._filterClickFct);
 	this._activated = false;
 }

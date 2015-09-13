@@ -8,31 +8,43 @@ var Player = function (gameEngine) {
     this._keyboardController = new Keyboard();
     this._runningLoop;
     this._animationState = 0;
+    this._direction = [0,0];
 
     var self = this;
 	this._keyboardController.addKeyListener(38,function(){ // UP
 		//console.log ("[DBG] key listner for UP !!");
-		if (self._position[1] - self._speed > 0)
+		if (self._position[1] - self._speed > 0) {
 			self._position[1] = self._position[1] - self._speed;
+			self._direction[1]=-1;
+		}
+
 	},true);
 
 	this._keyboardController.addKeyListener(39,function(){ // RIGHT
 		//console.log ("[DBG] key listner for RIGHT !!");
-		if (self._position[0] + self._speed < self._gameEngine._map.getSizeX() - self._hitBox[0])
-		self._position[0] = self._position[0] + self._speed;
+		if (self._position[0] + self._speed < self._gameEngine._map.getSizeX() - self._hitBox[0]){
+			self._position[0] = self._position[0] + self._speed;
+			self._direction[0]=1;
+		}		
 	});
 
 	this._keyboardController.addKeyListener(37,function(){ // LEFT
 		//console.log ("[DBG] key listner for LEFT !!");
-		if (self._position[0] - self._speed > 0)
+		if (self._position[0] - self._speed > 0){
 			self._position[0] = self._position[0] - self._speed;
+			self._direction[0]=-1;
+		}
 	},true);
 
 	this._keyboardController.addKeyListener(40,function(){ // DOWN
 		//console.log ("[DBG] key listner for DOWN !!");
-		if (self._position[1] + self._speed < self._gameEngine._map.getSizeY() - self._hitBox[1])
+		if (self._position[1] + self._speed < self._gameEngine._map.getSizeY() - self._hitBox[1]){
 			self._position[1] = self._position[1] + self._speed;
+			self._direction[1]=1;
+		}
 	});
+
+	this._fulgator = new Fulgator(gameEngine);
 }
 
 // Inheritence from entity
@@ -80,6 +92,9 @@ Player.prototype.setLife = function (life) {
 Player.prototype.getLife = function (life) {
 	return this._life;
 };
+Player.prototype.isFiring = function () {
+	return this._fulgator._firing;
+};
 
 Player.prototype.render = function() {
 
@@ -94,8 +109,11 @@ Player.prototype.render = function() {
 	var img=document.getElementById("heroImg");
 	//var pat=context.createPattern(img,"no-repeat");
 	var sizePicture = 0.7;
+	var directionAnim = 0;
+	if (this._direction[0] == 1)
+		directionAnim = 1;
 	if (this._animationState == 1) {
-		context.drawImage(	img,0,0,img.width/2,img.height,
+		context.drawImage(	img,0,directionAnim*img.height/2,img.width/2,img.height/2,
 							-sizePicture*this._hitBox[0],
 							-sizePicture*this._hitBox[1],
 							2*sizePicture*this._hitBox[0],
@@ -104,7 +122,7 @@ Player.prototype.render = function() {
 	}
 	else {
 
-		context.drawImage(	img,img.width/2,0,img.width/2,img.height,
+		context.drawImage(	img,img.width/2,directionAnim*img.height/2,img.width/2,img.height/2,
 							-sizePicture*this._hitBox[0],
 							-sizePicture*this._hitBox[1],
 							2*sizePicture*this._hitBox[0],
@@ -122,6 +140,8 @@ Player.prototype.render = function() {
 		context.stroke();
 	}
 
+	this._fulgator.render();
+
 
 };
 Player.prototype.start = function () {
@@ -131,12 +151,12 @@ Player.prototype.start = function () {
 	this._runningLoop = setInterval(runningLoop, 1000/30);
 
   	var self = this;
-  	var delta = 300;
+  	var delta = 250;
     function runningLoop()
     {
 		var targetRotation = self._rotation + self._rotationSpeed * self._rotationDirection
 		//console.log(targetRotation);
-		if (targetRotation >= 0.8 || targetRotation <= -0.8) {
+		if (targetRotation >= 0.6 || targetRotation <= -0.6) {
 			self._rotation += -1 * self._rotationSpeed * self._rotationDirection;
 			self._rotationDirection *= -1;
 		}
@@ -145,10 +165,18 @@ Player.prototype.start = function () {
 		}
 		// compute target position
 		delta += 1000/30;
-		if (delta > 300) {
+		if (delta > 250) {
 			self._animationState = (self._animationState + 1) % 2;
-			delta -= 500;
+			delta -= 250;
 		}
 
     }
+
+    
+	this._fulgator.start();
+}
+
+
+Player.prototype.isInRange = function (point) {
+	return this._fulgator.isInRange(point);
 }

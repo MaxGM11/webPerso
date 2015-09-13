@@ -4,7 +4,7 @@ var Entity = function(name) {
 	this._hitBox 			= [];
 	this._position;
 	this._rotationDirection = 1;
-	this._rotationSpeed 	= 0.1;
+	this._rotationSpeed 	= 0.15;
 	this._rotation 			= 0;
 	this._name 				= name;
 	this._modified 			= true;
@@ -54,14 +54,12 @@ Entity.prototype.collided = function (otherEntity) {
 			this._position[0] >= otherEntity.getPosition()[0] &&
 			this._position[0] <= otherEntity.getPosition()[0] + otherEntity.getHitBox()[0]) {
 			checkX = true;
-			console.log ("check collision x 1");
 		}
 
 		if (!checkX &&
 			this._position[0] + this._hitBox[0] >= otherEntity.getPosition()[0] &&
 			this._position[0] + this._hitBox[0] <= otherEntity.getPosition()[0] + otherEntity.getHitBox()[0]) {
 			checkX = true;
-			console.log ("check collision x 2");
 		}
 	}
 	else {
@@ -70,14 +68,12 @@ Entity.prototype.collided = function (otherEntity) {
 			otherEntity.getPosition()[0] >= this._position[0] &&
 			otherEntity.getPosition()[0] <= this._position[0] + this._hitBox[0]) {
 			checkX = true;
-			console.log ("check collision x 3");
 		}
 
 		if (!checkX &&
 			otherEntity.getPosition()[0] + otherEntity._hitBox[0] >= this._position[0] &&
 			otherEntity.getPosition()[0] + otherEntity._hitBox[0] <= this._position[0] + this._hitBox[0]) {
 			checkX = true;
-			console.log ("check collision x 4");
 		}
 	}
 
@@ -88,14 +84,12 @@ Entity.prototype.collided = function (otherEntity) {
 			this._position[1] >= otherEntity.getPosition()[1] &&
 			this._position[1] <= otherEntity.getPosition()[1] + otherEntity.getHitBox()[1]) {
 			checkY = true;
-			console.log ("check collision y 1");
 		}
 
 		if (!checkY &&
 			this._position[1] + this._hitBox[1] >= otherEntity.getPosition()[1] &&
 			this._position[1] + this._hitBox[1] <= otherEntity.getPosition()[1] + otherEntity.getHitBox()[1]) {
 			checkY = true;
-			console.log ("check collision y 2");
 		}
 	}
 	else {
@@ -104,14 +98,12 @@ Entity.prototype.collided = function (otherEntity) {
 			otherEntity.getPosition()[1] >= this._position[1] &&
 			otherEntity.getPosition()[1] <= this._position[1] + this._hitBox[1]) {
 			checkY = true;
-			console.log ("check collision y 3");
 		}
 
 		if (!checkY &&
 			otherEntity.getPosition()[1] + otherEntity._hitBox[1] >= this._position[1] &&
 			otherEntity.getPosition()[1] + otherEntity._hitBox[1] <= this._position[1] + this._hitBox[1]) {
 			checkY = true;
-			console.log ("check collision y 4");
 		}
 	}
 
