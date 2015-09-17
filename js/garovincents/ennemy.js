@@ -122,12 +122,18 @@ Ennemy.prototype.render = function () {
 
 	// Draw life bar
 	context.fillStyle="#FF0000";
-	context.fillRect(0,1.4*this._hitBox[1],this._hitBox[0],5);
+	context.fillRect(0,1.4*this._hitBox[1],this._hitBox[0],3);
 	context.fillStyle="#00FF00";
-	context.fillRect(this._hitBox[0]*(1-this._life/this._lifeMax),1.4*this._hitBox[1],this._hitBox[0]*(this._life/this._lifeMax),5);
+	context.fillRect(this._hitBox[0]*(1-this._life/this._lifeMax),1.4*this._hitBox[1],this._hitBox[0]*(this._life/this._lifeMax),3);
 
-	// Draw hit box if debug mode
+	// Draw hit box & life in text if debug mode
 	if(this._gameEngine._debug) {
+
+		// Draw life in text
+		context.fillStyle = "#FFFFFF";
+		context.font = "10px Courier new";
+		context.fillText(Math.trunc(this._life) + "/" + Math.trunc(this._lifeMax) , 0,1.4*this._hitBox[1])
+
 		context.beginPath();
 		context.strokeStyle="red";
 		context.rect(0,0,this._hitBox[0],this._hitBox[1]);
@@ -145,11 +151,12 @@ Ennemy.prototype.start = function () {
 	console.log ("this._runningLoop :"+this._runningLoop);
 
   	var self = this;
+  	var deltaNewDirectionEnnemy = 1000;
     function runningLoop()
     {
     	var i = 0;
     	i++;
-		console.log("Ennemy::runningLoop " + self._name + " : new state " + i);
+		//console.log("Ennemy::runningLoop " + self._name + " : new state " + i);
 
 		// compute target position
 		var targetPositionX = self._position[0] + self._direction[0] * self._speed;
@@ -168,14 +175,23 @@ Ennemy.prototype.start = function () {
 			targetPositionY = self._position[1] + self._direction[1] * self._speed;
 		}
 		self._position = [targetPositionX,targetPositionY];
+
+		deltaNewDirectionEnnemy += 1000/30;
+        if (deltaNewDirectionEnnemy > 5000) {
+			//console.log("Ennemy::start randomize ennemy " + self._name);
+            self.setDirection ([(Math.random() - 0.5)*6.0,(Math.random() - 0.5)*6.0]);
+            self.setSpeed(1 + Math.random() * 1.0);
+            deltaNewDirectionEnnemy -= Math.random()*5000;
+    	}
     }
 };
 
 Ennemy.prototype.kill = function (gameEngine) {
-	var audio = document.getElementById('deadWespSound');
-	audio.play();
+	this._gameEngine._soundPlayer.playSound("wespDead");
 	clearInterval(this._runningLoop);
-	this.startKilledAnimation()
+	this.startKilledAnimation();
+	this._gameEngine.increaseScore(this._lifeMax);
+
 };
 
 Ennemy.prototype.damage = function (dmg) {
@@ -205,12 +221,11 @@ Ennemy.prototype.startTouchedAnimation = function () {
 			self._position[1] += (0.5-Math.random()) * 5;
 		}
 		else{
-			console.log("End of touchedAnimation");
+			//console.log("End of touchedAnimation");
 			clearInterval(self._idAnimTouched);
 			self._idAnimTouched = 0;
 			return;
 		}
-		console.log("toto");
 	}
 };
 
@@ -224,16 +239,25 @@ Ennemy.prototype.startKilledAnimation = function () {
 	var self = this;
 
 	function killedAnimation() {
-		self._position[1] += 4;
+		self._position[1] += 8;
 		self._rotation += 0.5;
 		if (self._position[1] > self._gameEngine._map.getSizeY()) {
 			self._gameEngine.removeEnnemy(self._name);
 			clearInterval(self._idAnimKilled);
 			self._idAnimKilled = 0;
-			console.log("End of killedAnimation");
+			//console.log("End of killedAnimation");
 			return;
 		}
-		console.log("tata");
 	}
+
+};
+
+Ennemy.prototype.modifySpeedTimer = function (speed,timer) {
+	var prevSpeed = this.getSpeed();
+	this.setSpeed(speed);
+	var self = this;
+	setTimeout(function() {
+		self.setSpeed(prevSpeed);
+	},timer);
 
 };

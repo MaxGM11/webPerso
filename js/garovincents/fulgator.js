@@ -12,10 +12,22 @@ var Fulgator = function (gameEngine) {
 	this._animSmokeCoord = [[17,11],[127,11],[237,11],[347,11],[457,11],[567,11]];
 	this._animSpriteSize = [107,98];
 	this._animIndex = 0;
-
-
+	this._range = 0;
+	this._damage = 0;
 
 }
+
+Fulgator.prototype.getLoad = function() {return this._load;}
+Fulgator.prototype.setLoad = function(count) {(count > 0) ? (count < this._loadMax ) ? this._load = count : this._load = this._loadMax : this._load = 0;}
+
+Fulgator.prototype.getLoadMax = function() {return this._loadMax;}
+Fulgator.prototype.setLoadMax = function(loadMax) {this._loadMax = loadMax;}
+
+Fulgator.prototype.getDamage = function() {return this._damage;}
+Fulgator.prototype.setDamage = function(dmg) {this._damage=dmg;}
+
+Fulgator.prototype.getRange = function() {return this._range;}
+Fulgator.prototype.setRange = function(i) { (i> 20) ? this._range = i :	this._range = 20}
 
 Fulgator.prototype.render = function() {
 
@@ -61,8 +73,8 @@ Fulgator.prototype.render = function() {
 								this._animSpriteSize[0],this._animSpriteSize[1],		//-			
 								15,													//+	Position image
 								0,													//+
-								150,													//-	Size image
-								150														//-
+								this._range,													//-	Size image
+								this._range														//-
 		);
 		context.rotate(0.5);
 	}
@@ -81,10 +93,10 @@ Fulgator.prototype.render = function() {
 			var origin = this._position;
 			origin[0] += (this._gameEngine._player._hitBox[0]/2 + 40)*Math.cos(this._rotation);
 			origin[1] += (this._gameEngine._player._hitBox[0]/2 + 40)*Math.sin(this._rotation);
-			var point1 = [	origin[0] + 150*Math.cos(this._rotation-0.2),
-							origin[1] + 150*Math.sin(this._rotation-0.2)];
-			var point2 = [	origin[0] + 150*Math.cos(this._rotation+0.4),
-							origin[1] + 150*Math.sin(this._rotation+0.4)];
+			var point1 = [	origin[0] + this._range*Math.cos(this._rotation-0.2),
+							origin[1] + this._range*Math.sin(this._rotation-0.2)];
+			var point2 = [	origin[0] + this._range*Math.cos(this._rotation+0.4),
+							origin[1] + this._range*Math.sin(this._rotation+0.4)];
 			//console.log ("render " + origin +" _ "+ point1 +" _ "+ point2);
 		    var path=new Path2D();
 		    path.moveTo(origin[0],origin[1]);
@@ -98,14 +110,14 @@ Fulgator.prototype.render = function() {
 
 };
 Fulgator.prototype.playFireSound = function () {
-	console.log("AUDIOStart");
+	//console.log("AUDIOStart");
 	//var audio = new Audio("../sounds/garovincents/flams.mp3");
 	//audio.play();
 	var audio = document.getElementById('fulgatorSmokeSound');
 	audio.play();
 };
 Fulgator.prototype.stopFireSound = function () {
-	console.log("AUDIOStop");
+	//console.log("AUDIOStop");
 	//var audio = new Audio("../sounds/garovincents/flams.mp3");
 	//audio.play();
 	var audio = document.getElementById('fulgatorSmokeSound');
@@ -169,10 +181,10 @@ Fulgator.prototype.isInRange = function(point) {
 	origin[0] += (this._gameEngine._player._hitBox[0]/2 + 40)*Math.cos(this._rotation);
 	origin[1] += (this._gameEngine._player._hitBox[0]/2 + 40)*Math.sin(this._rotation);
 	//console.log("... origin2 : " + origin);
-	var point1 = [	origin[0] + 150*Math.cos(this._rotation-0.2),
-					origin[1] + 150*Math.sin(this._rotation-0.2)];
-	var point2 = [	origin[0] + 150*Math.cos(this._rotation+0.4),
-					origin[1] + 150*Math.sin(this._rotation+0.4)];
+	var point1 = [	origin[0] + this._range*Math.cos(this._rotation-0.2),
+					origin[1] + this._range*Math.sin(this._rotation-0.2)];
+	var point2 = [	origin[0] + this._range*Math.cos(this._rotation+0.4),
+					origin[1] + this._range*Math.sin(this._rotation+0.4)];
 
 	function sign (p1, p2, p3)
 	{

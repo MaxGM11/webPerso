@@ -1,7 +1,7 @@
 var Player = function (gameEngine) {
 	Entity.call(this,"Player");
 	this._position;
-	this._life;
+	this._godMode = false;
 	this._speed = 2;
 	this._godMode;
     this._gameEngine = gameEngine;
@@ -73,6 +73,28 @@ Player.prototype.setSpeed = function (speed) {
 	this._modified = true;
 	return true;
 };
+Player.prototype.getFulgatorLoad = function () {
+	return this._fulgator.getLoad();
+};
+Player.prototype.loadFulgator = function (count) {
+	if (count > 0)
+		this._fulgator.setLoad(this._fulgator.getLoad() + count);
+};
+Player.prototype.getFulgatorLoadMax = function () {
+	return this._fulgator.getLoadMax();
+}
+Player.prototype.setFulgatorRange = function (range) {
+	return this._fulgator.setRange(range);
+}
+Player.prototype.getFulgatorRange = function () {
+	return this._fulgator.getRange();
+};
+Player.prototype.setGodMode = function (b) {
+	this._godMode = b;
+}
+Player.prototype.getGodMode = function () {
+	return this._godMode;
+};
 Player.prototype.getSpeed = function () {
 	return this._speed;
 };
@@ -130,8 +152,15 @@ Player.prototype.render = function() {
 		);
 	}
 
+	
 	context.restore();
 
+	if (this.getGodMode()) {
+		// Draw GodMode in text
+		context.fillStyle = "#FFD700";
+		context.font = "25px Courier new";
+		context.fillText("GOD",this._position[0] + 0.4*this._hitBox[0],this._position[1] + 0.5*this._hitBox[0]);
+	}
 	// Draw hit box if debug mode
 	if(this._gameEngine._debug) {
 		context.beginPath();
@@ -139,6 +168,7 @@ Player.prototype.render = function() {
 		context.rect(this._position[0],this._position[1],this._hitBox[0],this._hitBox[1]);
 		context.stroke();
 	}
+
 
 	this._fulgator.render();
 
@@ -179,4 +209,43 @@ Player.prototype.start = function () {
 
 Player.prototype.isInRange = function (point) {
 	return this._fulgator.isInRange(point);
+}
+Player.prototype.getFulgatorDamage = function () {
+	return this._fulgator.getDamage();
+}
+Player.prototype.setFulgatorDamage = function (dmg) {
+	return this._fulgator.setDamage(dmg);
+}
+
+Player.prototype.modifyFulgatorRangeTimer = function (range,timer) {
+	var prevRange = this._fulgator.getRange();
+	this._fulgator.setRange(range);
+	var self = this;
+	setTimeout(function() {
+		self._fulgator.setRange(prevRange);
+	},timer);
+}
+Player.prototype.modifyFulgatorDamageTimer = function (dmg,timer) {
+	var prevDmg = this._fulgator.getDamage();
+	this._fulgator.setDamage(dmg);
+	var self = this;
+	setTimeout(function() {
+		self._fulgator.setDamage(prevDmg);
+	},timer);
+}
+Player.prototype.modifySpeedTimer = function (speed,timer) {
+	var prevSpeed = this.getSpeed();
+	this.setSpeed(speed);
+	var self = this;
+	setTimeout(function() {
+		self.setSpeed(prevSpeed);
+	},timer);
+}
+Player.prototype.modifyGodModeTimer = function (b,timer) {
+	var prevGodMode = this.getGodMode();
+	this.setGodMode(b);
+	var self = this;
+	setTimeout(function() {
+		self.setGodMode(prevGodMode);
+	},timer);
 }

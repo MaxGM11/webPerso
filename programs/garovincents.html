@@ -13,24 +13,42 @@
         <script type="text/javascript" src="../js/garovincents/map.js"></script>
         <script type="text/javascript" src="../js/garovincents/menu.js"></script>
         <script type="text/javascript" src="../js/garovincents/renderer.js"></script>
+        <script type="text/javascript" src="../js/garovincents/statistics.js"></script>
+        <script type="text/javascript" src="../js/garovincents/bonus.js"></script>
+        <script type="text/javascript" src="../js/garovincents/soundPlayer.js"></script>
         <script type="text/javascript" src="../js/garovincents/gameEngine.js"></script>
 	</head>
 <body>
 
-<canvas id="myCanvas" width="800" height="500" style="border:1px solid black;">
+<canvas id="myCanvas" width="1200" height="700" style="border:1px solid black;cursor:crosshair;">
     Votre navigateur ne supporte pas canvas.
 </canvas>
 <img id="wespImg"               src="../images/garovincents/wesp.png"       style="display:none;"/>
 <img id="heroImg"               src="../images/garovincents/hero2.png"      style="display:none;"/>
 <img id="fulgatorImg"           src="../images/garovincents/fulgator.png"   style="display:none;"/>
 <img id="fulgatorSmokeImg"      src="../images/garovincents/smoke.png"      style="display:none;"/>
+<img id="bonusImg"              src="../images/garovincents/bonus.png"      style="display:none;"/>
 
-<audio controls id="fulgatorSmokeSound" style="display:none;">
-  <source src="../sounds/flams.mp3" type="audio/mpeg">
-</audio>
-<audio controls id="deadWespSound" style="display:none;">
-  <source src="../sounds/deadWesp.mp3" type="audio/mpeg">
-</audio>
+<audio controls id="fulgatorSmokeSound" style="display:none;"><source   src="../sounds/flams.mp3"         type="audio/mpeg"></audio>
+<audio controls id="bonusPowerUpSound"  style="display:none;"><source   src="../sounds/bonusPowerUp.mp3"  type="audio/mpeg"></audio>
+<audio controls id="bonusLoadSound"     style="display:none;"><source      src="../sounds/bonusLoad.mp3"     type="audio/mpeg"></audio>
+<audio controls id="bonusSpeedUpSound"  style="display:none;"><source      src="../sounds/bonusSpeedUp.mp3"     type="audio/mpeg"></audio>
+<audio controls id="bonusGodSound"  style="display:none;"><source      src="../sounds/bonusGod.mp3"     type="audio/mpeg"></audio>
+<audio controls id="bonusSlowSound"  style="display:none;"><source      src="../sounds/bonusSlow.mp3"     type="audio/mpeg"></audio>
+<audio controls id="bonusFreezeSound"  style="display:none;"><source      src="../sounds/bonusFreeze.mp3"     type="audio/mpeg"></audio>
+
+<!-- Create as many <audio> as you want to be played simultaneously -->
+<audio controls id="deadWespSound0" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound1" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound2" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound3" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound4" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound5" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound6" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound7" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound8" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+<audio controls id="deadWespSound9" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+
 
 <script type="text/javascript">
 "use strict";
