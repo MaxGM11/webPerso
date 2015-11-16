@@ -145,18 +145,16 @@ Ennemy.prototype.render = function () {
 
 Ennemy.prototype.start = function () {
 
-	console.log("Ennemy::start Starting ennemy " + this._name);
+	//console.log("Ennemy::start Starting ennemy " + this._name);
     // Start the renderer
 	this._runningLoop = setInterval(runningLoop, 1000/30);
-	console.log ("this._runningLoop :"+this._runningLoop);
+	//console.log ("this._runningLoop :"+this._runningLoop);
 
   	var self = this;
   	var deltaNewDirectionEnnemy = 1000;
     function runningLoop()
     {
-    	var i = 0;
-    	i++;
-		//console.log("Ennemy::runningLoop " + self._name + " : new state " + i);
+    	if (self._pause) return;
 
 		// compute target position
 		var targetPositionX = self._position[0] + self._direction[0] * self._speed;
@@ -239,13 +237,12 @@ Ennemy.prototype.startKilledAnimation = function () {
 	var self = this;
 
 	function killedAnimation() {
-		self._position[1] += 8;
+		self._position[1] += parEnnemyKillSpeedDown;
 		self._rotation += 0.5;
 		if (self._position[1] > self._gameEngine._map.getSizeY()) {
 			self._gameEngine.removeEnnemy(self._name);
 			clearInterval(self._idAnimKilled);
 			self._idAnimKilled = 0;
-			//console.log("End of killedAnimation");
 			return;
 		}
 	}

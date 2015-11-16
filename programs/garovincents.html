@@ -1,7 +1,64 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Garovincent</title>
+		<title>Vincent contre le frelon asiatique</title>
+
+        <style type="text/css" media="screen">
+            html, body { margin: 0; padding: 0; }
+            #footer,#footerDefeat{
+                position: absolute;
+                background-repeat: repeat-x;
+                background-attachment: 
+                width: 100vw;
+                height: 100vh;
+                margin-top: 0vh;
+            }
+            #footer img,#footerDefeat img{
+                position: absolute;
+                bottom: 0;
+                
+            }
+            #footerDefeat img{
+                margin-left: -400px;
+
+            }
+            .animatedKelsch {
+                animation: monanimation 5s 1 forwards;
+            }
+            #title {
+                position: absolute;
+                width: 100vw;
+                height: 10vh;
+                margin-top: 0vh;
+            }
+            #title img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            #game {
+                position: absolute;
+                margin-left: 0;
+                width: 100vw;
+                margin-top: 0;
+            }
+            #game #myCanvas {
+                display: block;
+                margin-top: 7vh;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            @keyframes monanimation {
+              0% {
+                margin-left: -400px;
+              }
+              100%{
+                margin-left: 0px;
+              }
+            }
+
+        </style>
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type="text/javascript" src="../js/keyboard.js"></script>
@@ -16,60 +73,77 @@
         <script type="text/javascript" src="../js/garovincents/statistics.js"></script>
         <script type="text/javascript" src="../js/garovincents/bonus.js"></script>
         <script type="text/javascript" src="../js/garovincents/soundPlayer.js"></script>
+        <script type="text/javascript" src="../js/garovincents/damage.js"></script>
+        <script type="text/javascript" src="../js/garovincents/parameters.js"></script>
         <script type="text/javascript" src="../js/garovincents/gameEngine.js"></script>
 	</head>
 <body>
 
-<canvas id="myCanvas" width="1200" height="700" style="border:1px solid black;cursor:crosshair;">
-    Votre navigateur ne supporte pas canvas.
-</canvas>
-<img id="wespImg"               src="../images/garovincents/wesp.png"       style="display:none;"/>
-<img id="heroImg"               src="../images/garovincents/hero2.png"      style="display:none;"/>
-<img id="fulgatorImg"           src="../images/garovincents/fulgator.png"   style="display:none;"/>
-<img id="fulgatorSmokeImg"      src="../images/garovincents/smoke.png"      style="display:none;"/>
-<img id="bonusImg"              src="../images/garovincents/bonus.png"      style="display:none;"/>
+    <div id="title">
+        <img src="../images/garovincents/Title.png" alt="">
+    </div>
 
-<audio controls id="fulgatorSmokeSound" style="display:none;"><source   src="../sounds/flams.mp3"         type="audio/mpeg"></audio>
-<audio controls id="bonusPowerUpSound"  style="display:none;"><source   src="../sounds/bonusPowerUp.mp3"  type="audio/mpeg"></audio>
-<audio controls id="bonusLoadSound"     style="display:none;"><source      src="../sounds/bonusLoad.mp3"     type="audio/mpeg"></audio>
-<audio controls id="bonusSpeedUpSound"  style="display:none;"><source      src="../sounds/bonusSpeedUp.mp3"     type="audio/mpeg"></audio>
-<audio controls id="bonusGodSound"  style="display:none;"><source      src="../sounds/bonusGod.mp3"     type="audio/mpeg"></audio>
-<audio controls id="bonusSlowSound"  style="display:none;"><source      src="../sounds/bonusSlow.mp3"     type="audio/mpeg"></audio>
-<audio controls id="bonusFreezeSound"  style="display:none;"><source      src="../sounds/bonusFreeze.mp3"     type="audio/mpeg"></audio>
-
-<!-- Create as many <audio> as you want to be played simultaneously -->
-<audio controls id="deadWespSound0" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound1" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound2" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound3" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound4" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound5" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound6" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound7" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound8" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
-<audio controls id="deadWespSound9" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <div id="footerDefeat"><img src="../images/garovincents/FooterDefeat.png" alt=""></div>
+    <div id="footer"><img src="../images/garovincents/FooterBackground.png" alt=""></div>
+    <div id="game">
+        <canvas id="myCanvas" width="1200" height="650" style="border:2px solid green;cursor:pointer;">
+            Votre navigateur ne supporte pas canvas.
+        </canvas>
+    </div>
 
 
-<script type="text/javascript">
-"use strict";
+    <img id="wespImg"               src="../images/garovincents/wesp.png"               style="display:none;"/>
+    <img id="heroImg"               src="../images/garovincents/hero2.png"              style="display:none;"/>
+    <img id="fulgatorImg"           src="../images/garovincents/fulgator.png"           style="display:none;"/>
+    <img id="fulgatorSmokeImg"      src="../images/garovincents/smoke.png"              style="display:none;"/>
+    <img id="fulgatorFireImg"       src="../images/garovincents/fire.png"               style="display:none;"/>
+    <img id="bonusImg"              src="../images/garovincents/bonus.png"              style="display:none;"/>
+    <img id="manuBakcground"        src="../images/garovincents/MenuBackground.jpg"     style="display:none;"/>
 
-window.onload = function()
-{
-    var canvas = document.getElementById("myCanvas");
-    if(!canvas)
+    <audio controls id="fulgatorSmokeSound" style="display:none;"><source   src="../sounds/flams.mp3"         type="audio/mpeg"></audio>
+    <audio controls id="bonusPowerUpSound"  style="display:none;"><source   src="../sounds/bonusPowerUp.mp3"  type="audio/mpeg"></audio>
+    <audio controls id="bonusLoadSound"     style="display:none;"><source      src="../sounds/bonusLoad.mp3"     type="audio/mpeg"></audio>
+    <audio controls id="bonusSpeedUpSound"  style="display:none;"><source      src="../sounds/bonusSpeedUp.mp3"     type="audio/mpeg"></audio>
+    <audio controls id="bonusGodSound"  style="display:none;"><source      src="../sounds/bonusGod.mp3"     type="audio/mpeg"></audio>
+    <audio controls id="bonusSlowSound"  style="display:none;"><source      src="../sounds/bonusSlow.mp3"     type="audio/mpeg"></audio>
+    <audio controls id="bonusFreezeSound"  style="display:none;"><source      src="../sounds/bonusFreeze.mp3"     type="audio/mpeg"></audio>
+    <audio controls id="manScreamingSound"  style="display:none;"><source      src="../sounds/ManScreaming.mp3"     type="audio/mpeg"></audio>
+    <audio controls id="backgroundMusic"  style="display:none;"><source      src="../sounds/music01.mp3"     type="audio/mpeg"></audio>
+    <audio controls id="looseMusic"  style="display:none;"><source      src="../sounds/musicLoose.mp3"     type="audio/mpeg"></audio>
+
+    <!-- Create as many <audio> as you want to be played simultaneously -->
+    <audio controls id="deadWespSound0" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound1" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound2" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound3" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound4" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound5" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound6" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound7" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound8" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+    <audio controls id="deadWespSound9" style="display:none;"><source src="../sounds/deadWesp.mp3" type="audio/mpeg"></audio>
+
+
+    <script type="text/javascript">
+    "use strict";
+
+    window.onload = function()
     {
-        alert("Impossible de récupérer le canvas");
-        return;
+        var canvas = document.getElementById("myCanvas");
+        if(!canvas)
+        {
+            alert("Impossible de récupérer le canvas");
+            return;
+        }
+        var gameEngine = new GameEngine();
+
+        gameEngine.setRendereringParameters(canvas);
+        gameEngine.init();
+        gameEngine.start();
+        
     }
-    var gameEngine = new GameEngine();
 
-    gameEngine.setRendereringParameters(canvas);
-    gameEngine.init();
-    gameEngine.start();
-    
-}
-
-</script>
+    </script>
 
 </body>
 </html>

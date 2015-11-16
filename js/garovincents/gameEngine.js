@@ -1,6 +1,7 @@
 var GameEngine = function() {
 	this._player;
-	this._ennemies = [];
+    this._ennemies = [];
+    this._damages = [];
     this._map;
     this._menu;
     this._statistics;
@@ -14,6 +15,7 @@ var GameEngine = function() {
     this._debug = false;
     this._bonus = [];
     this._score = 0;
+    this._totalTime = 0;
 
 }
 GameEngine.prototype.init = function() {
@@ -22,12 +24,15 @@ GameEngine.prototype.init = function() {
 
     this._map = new Map(this);
     //this._map.setSize($("#myCanvas").width,$("#myCanvas").height);
-    this._map.setSize(1200,670);
+
+    this._map.setSize($("#myCanvas").width(),$("#myCanvas").height()-30);
     this._map.setBackgroundColor("#AAAAAA");
+    this._map.setBackgroundUrl("#AAAAAA");
 
     this._statistics = new Statistics(this);
     if (!this._debug) this._statistics.hide();
     this._soundPlayer = new SoundPlayer();
+    this._soundPlayer.playSound("backgroundMusic",true);
     this._menu = new Menu(this);
     this._menu.activate();
 
@@ -43,11 +48,13 @@ GameEngine.prototype.init = function() {
 
 	this._player = new Player(this);
 	this._player.setPosition(this._map.getCenter());
-	this._player.setHitBox([35,35]);
-    this._player.setSpeed(4);
+	this._player.setHitBox(parPlayerHitBox);
+    this._player.setSpeed(parPlayerSpeed);
     if (this._debug) this._player.setGodMode(true);
-    this._player.setFulgatorRange(200);
-    this._player.setFulgatorDamage(40);
+    this._player.setFulgatorRange(parPLayerFulgatorRange);
+    this._player.setFulgatorDamage(parPLayerFulgatorDamage);
+    this._player.setFulgatorDispersion(parPLayerFulgatorDispersion);
+    this._player.setFulgatorCritRate(parPLayerFulgatorCritRate);
 
     //var bonusCount = 10
     //for (var i = 0; i <= bonusCount; i++) {
@@ -59,15 +66,14 @@ GameEngine.prototype.init = function() {
     //};
 
 
-    var monsterCount = 10
-    for (var i = 0; i <= monsterCount; i++) {
+    for (var i = 0; i <= parEnnemyInitCount; i++) {
         var ennemy = new Ennemy(this);
         ennemy.setPosition([(this._map.getSizeX()-50)*Math.random(),100*Math.random()]);
         ennemy.setName("ennemy"+i);
-        var size = 10 + 50*Math.random();
-        var life = 100 * size;
+        var size = parEnnemyInitSizeDefault + parEnnemyInitSizeCoefRandom*Math.random();
+        var life = parEnnemyInitLifeCoef * size;
         ennemy.setHitBox([size,size]);
-        ennemy.setSpeed(1 + Math.random()*2);
+        ennemy.setSpeed(parEnnemyInitSpeedDefault + Math.random()*parEnnemyInitSpeedCoefRandom);
         ennemy.setLife(life);
         ennemy.setLifeMax(life);
         ennemy.setDirection([0,1]);
@@ -144,10 +150,14 @@ GameEngine.prototype.start = function() {
         // render map
         self._map.render();
 
+        // render fulgator and its smoke
+        self._player._fulgator.render();
+
         // render ennemies
         for (var i = 0 ;  i < self._ennemies.length ; i++) {
             self._ennemies[i].render();
         }
+
 
         // render bonuses
         for (var i = 0 ;  i < self._bonus.length ; i++) {
@@ -157,6 +167,10 @@ GameEngine.prototype.start = function() {
         // render player
         self._player.render(self);
 
+        // render damages
+        for (var i = 0 ;  i < self._damages.length ; i++) {
+            self._damages[i].render();
+        }
         // render statistics
         if (self._statistics.displayed())
             self._statistics.render();
@@ -178,14 +192,42 @@ GameEngine.prototype.renderHeader = function() {
     this._context.font = "15px Courier new";
     this._context.fillStyle = "#FFFFFF";
     this._context.fillText("SCORE " + Math.trunc(this._score) , 10, 25);
+    this._context.fillText("TIME " + Math.trunc(this._totalTime/1000) + "s", 500, 25);
 }
 GameEngine.prototype.debug = function() {
     //console.log("GameEngine::debug a message from GameEngine !")
 }
 GameEngine.prototype.increaseScore = function(toAdd) {
     this._score += toAdd;
+    this._score = Math.round(this._score);
 }
 
+GameEngine.prototype.startLoosePhase = function() {
+    var self = this;
+    clearInterval(this._gameLoopId);
+    for (var i = 0 ;  i < this._ennemies.length ; i++) {
+        this._ennemies[i].setPause(true);
+    }
+    this._player.setPause(true);
+    $("#footerDefeat>img").addClass("animatedKelsch");
+    setTimeout(function(){self._soundPlayer.playSound("looseMusic",false);},0);
+    setTimeout(function(){self._soundPlayer.playSound("manScreaming",false);},3000);
+
+    var audio = document.getElementById('backgroundMusic');
+    audio.pause();
+    audio.load();
+
+    clearInterval(this._renderingLoopId);
+    this._context.restore();
+    this._context.fillStyle = "#FFD700";
+    this._context.font = "150px Courier new";
+    this._context.fillText("YOU LOOSE",150,this._map.getSizeY()/2);
+    this._context.fillText("NOOB !",300,this._map.getSizeY()/2 + 100);
+    this._context.fillStyle = "#FF0000";
+    this._context.font = "100px Courier new";
+    this._context.fillText("Score : " + this._score,150,this._map.getSizeY()/2 + 250);
+
+}
 GameEngine.prototype.startGame = function() {
     // Start the game
     var self = this;
@@ -202,6 +244,10 @@ GameEngine.prototype.startGame = function() {
     var deltaNewEnnemyEntrance = 0;
     var deltaNewBonusEntrance = 0;
     var deltaTimeScore = 0;
+    var phase1Once = false;
+    var phase2Once = false;
+    var phase3Once = false;
+    var phase4Once = false;
     function gameLoop() {
 
         
@@ -214,8 +260,7 @@ GameEngine.prototype.startGame = function() {
             if (self._ennemies[i].getLife() > 0) {
                 if (self._player.collided(self._ennemies[i])) {
                     //console.log("GameEngine::renderingLoop : LOOSE");
-                    clearInterval(self._gameLoopId);
-                    self._pause = true;
+                    self.startLoosePhase();
                 }
             }
         }
@@ -225,7 +270,6 @@ GameEngine.prototype.startGame = function() {
            if (self._player.collided(self._bonus[i])) {
                 self._bonus[i].activate();
                 self.removeBonus(i);
-
            }
         }
         
@@ -244,49 +288,62 @@ GameEngine.prototype.startGame = function() {
                     self._player.isInRange([self._ennemies[i].getPosition()[0] + self._ennemies[i].getHitBox()[0],
                                             self._ennemies[i].getPosition()[1] + self._ennemies[i].getHitBox()[1]   ])
                 )) {
-                    self._ennemies[i].damage(self._player.getFulgatorDamage());
+                    damage = new Damage(self,
+                                        self._ennemies[i],
+                                        self._player.getFulgatorDamage(),
+                                        self._player.getFulgatorDispersion(),
+                                        self._player.getFulgatorCritRate()
+                    );
+                    damage.execute();
+                    self._damages.push(damage);
+                    //self._ennemies[i].damage(self._player.getFulgatorDamage());
                     self._ennemies[i].startTouchedAnimation();
                 }
             }
         }
 
+        // Delete finished damages
+        for (var i = 0; i < self._damages.length; i++) {
+            if (self._damages[i].isFinished()) self._damages.splice(i,1);
+        }
 
         // Make new ennemy coming
-        var securityDistance = 100;
-        if (deltaNewEnnemyEntrance > 2000) {
-            var randomPosition = [(self._map.getSizeX()-50)*Math.random(),100*Math.random()];
-            if (Math.sqrt(  (randomPosition[0]-self._player.getPosition()[0])*(randomPosition[0]-self._player.getPosition()[0])
-                           +(randomPosition[1]-self._player.getPosition()[1])*(randomPosition[1]-self._player.getPosition()[1]))
-                > securityDistance )
-            {
+        if (deltaNewEnnemyEntrance > parDeltaNewEnnemyEntrance) {
+            if (self._ennemies.length < parMaxEnnemiesOnScreen) {
+                var randomPosition = [(self._map.getSizeX()-50)*Math.random(),100*Math.random()];
+                if (Math.sqrt(  (randomPosition[0]-self._player.getPosition()[0])*(randomPosition[0]-self._player.getPosition()[0])
+                               +(randomPosition[1]-self._player.getPosition()[1])*(randomPosition[1]-self._player.getPosition()[1]))
+                    > parSecurityDistancePopEnnemy )
+                {
 
-                var ennemy = new Ennemy(self);
-                ennemy.setPosition(randomPosition);
-                ennemy.setName("ennemy"+self._ennemies.length+1);
-                var size = 10 + 30*Math.random();
-                var life = 100 * size;
-                ennemy.setHitBox([size,size]);
-                ennemy.setSpeed(1 + Math.random()*2);
-                ennemy.setLife(life);
-                ennemy.setLifeMax(life);
-                ennemy.setDirection([0,1]);
-                self._ennemies.push(ennemy);
-                ennemy.start();
+                    var ennemy = new Ennemy(self);
+                    ennemy.setPosition(randomPosition);
+                    ennemy.setName("ennemy"+self._ennemies.length+1);
+                    var size = parEnnemyInitSizeDefault + parEnnemyInitSizeCoefRandom*Math.random();
+                    var life = parEnnemyInitLifeCoef * size;
+                    ennemy.setHitBox([size,size]);
+                    ennemy.setSpeed(parEnnemyInitSpeedDefault + Math.random()*parEnnemyInitSpeedCoefRandom);
+                    ennemy.setLife(life);
+                    ennemy.setLifeMax(life);
+                    ennemy.setDirection([0,1]);
+                    self._ennemies.push(ennemy);
+                    ennemy.start();
+                }
+                deltaNewEnnemyEntrance -= parDeltaNewEnnemyEntrance*Math.random();
             }
-            deltaNewEnnemyEntrance -= 2000*Math.random();
         }
         deltaNewEnnemyEntrance += 1000/30;
 
         // Make new bonus to pop
-        if (deltaNewBonusEntrance > 5000) {
-            if (self._bonus.length <= 3) {
+        if (deltaNewBonusEntrance >  parDeltaNewBonusEntrance) {
+            if (self._bonus.length <= parMaxBonusOnScreen) {
                 var bonus = new Bonus(self);
                 bonus.setPosition([(self._map.getSizeX()-50)*Math.random(),(self._map.getSizeY()-50)*Math.random()]);
                 bonus.setRandomType();
                 bonus.setHitBox([25,25]);
                 self._bonus.push(bonus);
             }
-            deltaNewBonusEntrance -= 5000*Math.random();
+            deltaNewBonusEntrance -= parDeltaNewBonusEntrance *Math.random();
         }
         deltaNewBonusEntrance += 1000/30;
 
@@ -296,6 +353,47 @@ GameEngine.prototype.startGame = function() {
             deltaTimeScore -= 1000
         }
         deltaTimeScore += 1000/30;
+        self._totalTime += 1000/30;
+
+
+        if (self._totalTime>20000 && phase1Once == false) {
+            parDeltaNewEnnemyEntrance = parDeltaNewEnnemyEntrance/2;
+            phase1Once = true;
+        }
+
+        if (self._totalTime>30000 && phase2Once == false) {
+            //parDeltaNewEnnemyEntrance = parDeltaNewEnnemyEntrance/2;
+            self._player.setFulgatorDamage(self._player.getFulgatorDamage()*2);
+            parEnnemyInitSizeCoefRandom = parEnnemyInitSizeCoefRandom*2;
+            phase2Once = true;
+        }
+
+        if (self._totalTime>40000 && phase3Once == false) {
+            parEnnemyInitLifeCoef = parEnnemyInitLifeCoef*2;
+            phase3Once = true;
+        }
+
+        if (self._totalTime>50000 && phase4Once == false) {
+            parMaxEnnemiesOnScreen      = parMaxEnnemiesOnScreen*3;
+            parDeltaNewEnnemyEntrance   = parDeltaNewEnnemyEntrance/4;
+            parEnnemyInitSizeCoefRandom = parEnnemyInitSizeCoefRandom/10;
+            parEnnemyInitLifeCoef       = parEnnemyInitLifeCoef/10;
+
+            // Create boss
+            var ennemy = new Ennemy(self);
+            ennemy.setPosition([0,0]);
+            ennemy.setName("ennemy"+self._ennemies.length+1);
+            var size = 300;
+            ennemy.setHitBox([size,size]);
+            ennemy.setSpeed(1);
+            ennemy.setLife(10000);
+            ennemy.setLifeMax(10000);
+            ennemy.setDirection([0,1]);
+            self._ennemies.push(ennemy);
+            ennemy.start();
+
+            phase4Once = true;
+        }
 
     }
 }

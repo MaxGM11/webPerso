@@ -60,7 +60,8 @@ Bonus.prototype.setRandomType = function () {
 		case 1 : this.setType("freeze");	break;
 		case 2 : this.setType("load");		break;
 		case 3 : this.setType("slow");		break;
-		case 4 : this.setType("god");		break;
+		//case 4 : this.setType("god");		break;
+		case 4 : this.setType("load");		break;
 		case 5 : this.setType("speedUp");	break;
 	}
 	return true;
@@ -72,8 +73,8 @@ Bonus.prototype.getType = function () {
 Bonus.prototype.activate = function () {
 	switch (this._type) {
 		case "powerUp": // ORANGE
-			this._gameEngine._player.modifyFulgatorRangeTimer(500,5000);
-			this._gameEngine._player.modifyFulgatorDamageTimer(100,5000);
+			this._gameEngine._player.modifyFulgatorRangeTimer(parBonusPowerUpRange,parBonusPowerUpTimer);
+			this._gameEngine._player.modifyFulgatorDamageTimer(parBonusPowerUpDamage,parBonusPowerUpTimer);
 			this._gameEngine._soundPlayer.playSound("bonusPowerUp");
 		break;
 		case "freeze":  // LIGHT BLUE
@@ -89,7 +90,7 @@ Bonus.prototype.activate = function () {
 			this._gameEngine._soundPlayer.playSound("bonusSlow");
 		break;
 		case "load":  // GREEN
-			this._gameEngine._player.loadFulgator(500);
+			this._gameEngine._player.loadFulgator(parBonusLoadFulgator);
 			this._gameEngine._soundPlayer.playSound("bonusLoad");
 			break;
 		case "god":  // PURPLRE
@@ -97,7 +98,7 @@ Bonus.prototype.activate = function () {
 			this._gameEngine._soundPlayer.playSound("bonusGod");
 			break;
 		case "speedUp":  // BLUE
-			this._gameEngine._player.modifySpeedTimer(8,3000);
+			this._gameEngine._player.modifySpeedTimer(parBonusSpeedUpSpeed,parBonusSpeedUpTimer);
 			this._gameEngine._soundPlayer.playSound("bonusSpeedUp");
 		break;
 	}

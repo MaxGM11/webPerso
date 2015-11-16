@@ -1,6 +1,6 @@
 var Fulgator = function (gameEngine) {
-	this._loadMax = 1000
-	this._load = 700;
+	this._loadMax = parFulgatorLoadMax
+	this._load = parFulgatorLoad;
 	this._direction = [];
 	this._target = [];
 	this._position = [];
@@ -14,8 +14,42 @@ var Fulgator = function (gameEngine) {
 	this._animIndex = 0;
 	this._range = 0;
 	this._damage = 0;
+	this._pause = false;
+	this._dispersion=0;
+	this._critRate=0;
+	this._boost = false;
 
 }
+Fulgator.prototype.getDispersion = function () {
+	return this._dispersion;
+}
+Fulgator.prototype.getCritRate = function () {
+	return this._critRate;
+}
+
+Fulgator.prototype.setDispersion = function (iDispersion) {
+	this._dispersion = iDispersion;
+}
+Fulgator.prototype.setCritRate = function (iCritRate) {
+	this._critRate = iCritRate;
+}
+
+Fulgator.prototype.setPause = function(pauseBoolean) {
+	if (pauseBoolean === undefined) {
+		console.log("Fulgator::setPause [ERROR] input parameter undefined");
+		return false;
+	}
+	this._pause = pauseBoolean;
+	this.stopFireSound();
+};
+
+Fulgator.prototype.tooglePause = function() {
+	this._pause = !this._pause;
+};
+
+Fulgator.prototype.stop = function() {
+	clearInterval(this._runningLoop);
+};
 
 Fulgator.prototype.getLoad = function() {return this._load;}
 Fulgator.prototype.setLoad = function(count) {(count > 0) ? (count < this._loadMax ) ? this._load = count : this._load = this._loadMax : this._load = 0;}
@@ -63,7 +97,7 @@ Fulgator.prototype.render = function() {
 	// Draw smoke
 	if(this._tryFiring && this._load >= 1) {
 
-		var img2=document.getElementById("fulgatorSmokeImg");
+		var img2=document.getElementById(this._boost?"fulgatorFireImg":"fulgatorSmokeImg");
 		var pat=context.createPattern(img,"no-repeat");
 		//context.drawImage(img,this._target[0],this._target[1],30,70);
 		//context.drawImage(img2,this._gameEngine._player._hitBox[0]/2 + 20,0,50,20);
@@ -128,14 +162,17 @@ Fulgator.prototype.start = function () {
 
 	var self = this;
 	this._gameEngine._canvas.addEventListener('mousemove',function(event){
+		if (self._pause) return;
 		var cursorX = event.pageX - self._gameEngine._canvas.offsetLeft,
 	        cursorY = event.pageY - self._gameEngine._canvas.offsetTop;
 		self._target = [cursorX,cursorY];
 	});
 	this._gameEngine._canvas.addEventListener('mousedown',function(event){
+		if (self._pause) return;
 		self._tryFiring = true;
 	});
 	this._gameEngine._canvas.addEventListener('mouseup',function(event){
+		if (self._pause) return;
 		self._tryFiring = false;
 	});
 	console.log("Fulgator::start Starting Fulgator ");
@@ -146,6 +183,8 @@ Fulgator.prototype.start = function () {
 	var onceStop = true;
     function runningLoopp()
     {
+    	if (self._pause) return;
+
     	if (self._tryFiring && self._load >= 1) {
     		if (self._animIndex == self._animSmokeCoord.length-1) {
     			self._animIndex = 0;

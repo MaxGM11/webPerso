@@ -1,5 +1,5 @@
 var Entity = function(name) {
-	console.log("Entity::Constructor : " + name);
+	//console.log("Entity::Constructor : " + name);
 	this._resourceImg;
 	this._hitBox 			= [];
 	this._position;
@@ -8,6 +8,7 @@ var Entity = function(name) {
 	this._rotation 			= 0;
 	this._name 				= name;
 	this._modified 			= true;
+	this._pause 			= false;
 
 }
 
@@ -21,6 +22,19 @@ Entity.prototype.setResourceImg = function(imgName) {
 
 Entity.prototype.getResourceImg = function () {
 	return this._resourceImg;
+};
+
+Entity.prototype.setPause = function(pauseBoolean) {
+	console.log("Entity.prototype.setPause");
+	if (pauseBoolean === undefined) {
+		console.log("Entity::setPause [ERROR] input parameter undefined");
+		return false;
+	}
+	this._pause = pauseBoolean;
+};
+
+Entity.prototype.tooglePause = function() {
+	this._pause = !this._pause;
 };
 
 Entity.prototype.setHitBox = function(hitBox) {

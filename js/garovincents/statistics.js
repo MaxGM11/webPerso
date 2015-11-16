@@ -21,16 +21,16 @@ Statistics.prototype.render = function () {
 	context.fillStyle = this._fontColor;
 
 	// Init data
-  	var livingWesp				= 0;
-  	var killedWesp				= 0;
-  	var livingWespLifeAvg		= 0;
-  	var livingWespLifeTotal		= 0;
-  	var playerGod				= 0;
-  	var playerFulgatorLoad		= 0;
+    var livingWesp            = 0;
+    var killedWesp            = 0;
+    var livingWespLifeAvg     = 0;
+    var livingWespLifeTotal   = 0;
+    var playerGod             = 0;
+    var playerFulgatorLoad    = 0;
     var playerFulgatorLoadMax = 0;
-    var playerFulgatorDamage = 0;
-    var playerSpeed = 0;
-  	var fps						= 0;
+    var playerFulgatorDamage  = 0;
+    var playerSpeed           = 0;
+    var fps                   = 0;
 
   	// Get data
     for (var i = 0 ;  i < this._gameEngine._ennemies.length ; i++) {

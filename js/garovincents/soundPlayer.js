@@ -9,6 +9,33 @@ var SoundPlayer = function () {
 		this._wespDead.push(document.getElementById('deadWespSound'+i));
 	}
 	
+	// ManScream audio resource
+	this._manScreaming = [];
+	this._countmanScreaming = 0;
+	this._maxmanScreaming = 1;
+	// Init
+	for (var i = 0 ; i<this._maxmanScreaming ; i++ ){
+		this._manScreaming.push(document.getElementById('manScreamingSound'));
+	}
+
+	// background music audio resource
+	this._backgroundMusic = [];
+	this._countbackgroundMusic = 0;
+	this._maxbackgroundMusic = 1;
+	// Init
+	for (var i = 0 ; i<this._maxbackgroundMusic ; i++ ){
+		this._backgroundMusic.push(document.getElementById('backgroundMusic'));
+	}
+
+	// loose music audio resource
+	this._looseMusic = [];
+	this._countlooseMusic = 0;
+	this._maxlooseMusic = 1;
+	// Init
+	for (var i = 0 ; i<this._maxlooseMusic ; i++ ){
+		this._looseMusic.push(document.getElementById('looseMusic'));
+	}
+
 	// Bonus PowerUp audio resource
 	this._bonusPowerUp = [];
 	this._countbonusPowerUp = 0;
@@ -50,6 +77,7 @@ var SoundPlayer = function () {
 	for (var i = 0 ; i<this._maxbonusSlow ; i++ ){
 		this._bonusSlow.push(document.getElementById('bonusSlowSound'));
 	}
+
 	// Bonus Freeze audio resource
 	this._bonusFreeze = [];
 	this._countbonusFreeze = 0;
@@ -61,10 +89,18 @@ var SoundPlayer = function () {
 	
 }
 
-SoundPlayer.prototype.playSound = function (id) {
-
-	this["_"+id][this["_count"+id]].play();
+SoundPlayer.prototype.playSound = function (id,repeat) {
+	var self = this;
+	var sound = this["_"+id][this["_count"+id]];
+	sound.play();
 	this["_count"+id] = (this["_count"+id] + 1) % this["_max"+id];
 
+	if (repeat != undefined && repeat == true) {
+		setTimeout(function(){self.playSound(id,repeat);},sound.duration*1000 + 1);
+	}
+
+}
+
+SoundPlayer.prototype.stopSound = function (id) {
 
 }

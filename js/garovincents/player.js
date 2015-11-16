@@ -13,6 +13,7 @@ var Player = function (gameEngine) {
     var self = this;
 	this._keyboardController.addKeyListener(38,function(){ // UP
 		//console.log ("[DBG] key listner for UP !!");
+		if (self._pause) return;
 		if (self._position[1] - self._speed > 0) {
 			self._position[1] = self._position[1] - self._speed;
 			self._direction[1]=-1;
@@ -22,6 +23,7 @@ var Player = function (gameEngine) {
 
 	this._keyboardController.addKeyListener(39,function(){ // RIGHT
 		//console.log ("[DBG] key listner for RIGHT !!");
+		if (self._pause) return;
 		if (self._position[0] + self._speed < self._gameEngine._map.getSizeX() - self._hitBox[0]){
 			self._position[0] = self._position[0] + self._speed;
 			self._direction[0]=1;
@@ -30,6 +32,7 @@ var Player = function (gameEngine) {
 
 	this._keyboardController.addKeyListener(37,function(){ // LEFT
 		//console.log ("[DBG] key listner for LEFT !!");
+		if (self._pause) return;
 		if (self._position[0] - self._speed > 0){
 			self._position[0] = self._position[0] - self._speed;
 			self._direction[0]=-1;
@@ -38,6 +41,7 @@ var Player = function (gameEngine) {
 
 	this._keyboardController.addKeyListener(40,function(){ // DOWN
 		//console.log ("[DBG] key listner for DOWN !!");
+		if (self._pause) return;
 		if (self._position[1] + self._speed < self._gameEngine._map.getSizeY() - self._hitBox[1]){
 			self._position[1] = self._position[1] + self._speed;
 			self._direction[1]=1;
@@ -60,6 +64,18 @@ Player.prototype.setPosition = function (position) {
 	this._position = position;
 	return true;
 };
+Player.prototype.setPause = function (pauseBoolean) {
+	//if (pauseBoolean === undefined) {
+	//	console.log("Player::setPause [ERROR] input parameter undefined");
+	//	return false;
+	//}
+	//this._pause = pauseBoolean;
+	console.log("Player.prototype.setPause");
+	Entity.prototype.setPause.call(this,pauseBoolean);
+
+	this._fulgator.setPause(pauseBoolean);
+	return true;
+};
 Player.prototype.getPosition = function () {
 	return this._position;
 };
@@ -76,6 +92,18 @@ Player.prototype.setSpeed = function (speed) {
 Player.prototype.getFulgatorLoad = function () {
 	return this._fulgator.getLoad();
 };
+Player.prototype.getFulgatorDispersion = function () {
+	return this._fulgator.getDispersion();
+}
+Player.prototype.getFulgatorCritRate = function () {
+	return this._fulgator.getCritRate();
+}
+Player.prototype.setFulgatorDispersion = function (iDispersion) {
+	this._fulgator.setDispersion(iDispersion);
+}
+Player.prototype.setFulgatorCritRate = function (iCritRate) {
+	this._fulgator.setCritRate(iCritRate);
+}
 Player.prototype.loadFulgator = function (count) {
 	if (count > 0)
 		this._fulgator.setLoad(this._fulgator.getLoad() + count);
@@ -170,7 +198,6 @@ Player.prototype.render = function() {
 	}
 
 
-	this._fulgator.render();
 
 
 };
@@ -184,6 +211,8 @@ Player.prototype.start = function () {
   	var delta = 250;
     function runningLoop()
     {
+    	if (self._pause) return;
+
 		var targetRotation = self._rotation + self._rotationSpeed * self._rotationDirection
 		//console.log(targetRotation);
 		if (targetRotation >= 0.6 || targetRotation <= -0.6) {
@@ -228,9 +257,11 @@ Player.prototype.modifyFulgatorRangeTimer = function (range,timer) {
 Player.prototype.modifyFulgatorDamageTimer = function (dmg,timer) {
 	var prevDmg = this._fulgator.getDamage();
 	this._fulgator.setDamage(dmg);
+	this._fulgator._boost = true;
 	var self = this;
 	setTimeout(function() {
 		self._fulgator.setDamage(prevDmg);
+		self._fulgator._boost = false;
 	},timer);
 }
 Player.prototype.modifySpeedTimer = function (speed,timer) {

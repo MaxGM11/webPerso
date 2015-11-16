@@ -8,7 +8,7 @@ var Menu = function (gameEngine) {
 	this._filterClickFct = function(event){
 		var cursorX = event.pageX - self._gameEngine._canvas.offsetLeft,
 	        cursorY = event.pageY - self._gameEngine._canvas.offsetTop;
-	    console.log("Click event in " + cursorX + "," +cursorY);
+	    console.log("Click event in " + cursorX + "," +cursorY +"(" +event.pageX + "," +event.pageY+ ")");
 
 		// list button and see if one is clicked
 		self._buttons.forEach(function(button){
@@ -42,7 +42,7 @@ Menu.prototype.addButton =function(button) {
 	var mapSizeY 	= this._gameEngine._map.getSizeY();
     button.size = [
 				mapSizeX * (1-this._buttonWidthRatio) / 2,
-				2*i*mapSizeY * this._buttonHeightRatio,
+				50 + 2*i*mapSizeY * this._buttonHeightRatio,
 				mapSizeX * this._buttonWidthRatio,
 				mapSizeY * this._buttonHeightRatio
     ];
@@ -57,13 +57,18 @@ Menu.prototype.render = function () {
 	var mapSizeY 	= this._gameEngine._map.getSizeY();
 	if (this._activated) {
 		var self = this;
+
+		var img=document.getElementById("manuBakcground");
+		var pat=context.createPattern(img,"no-repeat");
+		context.drawImage(img,0,0,mapSizeX,mapSizeY+30);
+
 		this._buttons.forEach(function(button){
 			//console.log("Rendering button :" + button);
-			context.fillStyle = "#00FF00";
-			context.fillRect(button.size[0],button.size[1],button.size[2],button.size[3]);
-			context.fillStyle = "#000000";
-			context.font = "30px Arial";
-			context.fillText(button.name,button.size[0],button.size[1]+30);
+			// context.fillStyle = "#00FF00";
+			// context.fillRect(button.size[0],button.size[1],button.size[2],button.size[3]);
+			context.fillStyle = "#FFFFFF";
+			context.font = "90px Arial";
+			context.fillText(button.name,(mapSizeX)/2-(button.name.length)*20,button.size[1]+40);
 
 			i++;
 		});
